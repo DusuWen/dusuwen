@@ -155,6 +155,78 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2019/09/06/同时配置多个git账号/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/dusuwen/images/avatar.gif">
+      <meta itemprop="name" content="DrLouie">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/dusuwen/2019/09/06/同时配置多个git账号/" class="post-title-link" itemprop="url">同时配置多个git账号</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-09-06 11:20:37" itemprop="dateCreated datePublished" datetime="2019-09-06T11:20:37+08:00">2019-09-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-07-28 15:45:55" itemprop="dateModified" datetime="2020-07-28T15:45:55+08:00">2020-07-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Why"><a href="#Why" class="headerlink" title="Why"></a>Why</h3><p>因为要在公司电脑上使用公司的gitlab同时还需要使用自己的github，所以需要根据项目区分commit时的账户。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/dusuwen/2019/09/06/同时配置多个git账号/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
     <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2019/08/09/译-我用React和Vue创建了一个同样的app，这里是他们的不同之处/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -809,91 +881,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2018/06/28/API结果逻辑/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/dusuwen/images/avatar.gif">
-      <meta itemprop="name" content="DrLouie">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/dusuwen/2018/06/28/API结果逻辑/" class="post-title-link" itemprop="url">API结果逻辑</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2018-06-28 11:05:48" itemprop="dateCreated datePublished" datetime="2018-06-28T11:05:48+08:00">2018-06-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-28 16:16:01" itemprop="dateModified" datetime="2020-07-28T16:16:01+08:00">2020-07-28</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="准备过程"><a href="#准备过程" class="headerlink" title="准备过程"></a>准备过程</h2><ul>
-<li>tmdb的key</li>
-<li>track.tv的key</li>
-</ul>
-<h3 id="获取下集播放时间的方法"><a href="#获取下集播放时间的方法" class="headerlink" title="获取下集播放时间的方法"></a>获取下集播放时间的方法</h3><ul>
-<li><p>先用tmdb的接口获取imdb_id</p>
-</li>
-<li><p>再用trakt的接口获取下集的季数和集数以及名称</p>
-</li>
-<li><p>在tmdb用季数和集数获取该集的播放日期</p>
-</li>
-<li><p>使用播放日期与当前日期进行计算得出倒数日</p>
-</li>
-<li><p>使用tvdb获取airs days of week和airsTime</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/dusuwen/2018/06/28/API结果逻辑/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -963,14 +950,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/dusuwen/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/dusuwen/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
