@@ -155,6 +155,88 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2024/09/04/译-如何创建一个npm包/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/dusuwen/images/avatar.gif">
+      <meta itemprop="name" content="DrLouie">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/dusuwen/2024/09/04/译-如何创建一个npm包/" class="post-title-link" itemprop="url">译-如何创建一个npm包</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-09-04 14:05:49" itemprop="dateCreated datePublished" datetime="2024-09-04T14:05:49+08:00">2024-09-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-09-05 14:26:24" itemprop="dateModified" datetime="2024-09-05T14:26:24+08:00">2024-09-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在本指南中，我们将介绍将包发不到npm所需的每一步骤。</p>
+<p>这不是一个最简指南，我们将从一个空文件夹建立一个完全可用于生产环境的包，包括</p>
+<ul>
+<li>Git 用于版本控制</li>
+<li>TypeScript 用于编写代码并保持类型安全 </li>
+<li>Prettier 用于格式化我们的代码</li>
+<li>@arethetypeswrong/cli 用于检查我们的导出</li>
+<li>tsup 用于把我们的 TypeScript 代码编译为 CJS 和 ESM</li>
+<li>Vitest 用于运行测试</li>
+<li>GitHub Actions 用于运行 CI 集成</li>
+<li>Changesets 用于记录版本和发布包
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/dusuwen/2024/09/04/译-如何创建一个npm包/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
     <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2024/08/12/简单了解docker/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -318,7 +400,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-04-23 13:39:45" itemprop="dateModified" datetime="2024-04-23T13:39:45+08:00">2024-04-23</time>
+                <time title="Modified: 2024-09-05 14:26:42" itemprop="dateModified" datetime="2024-09-05T14:26:42+08:00">2024-09-05</time>
               </span>
 
           
@@ -747,75 +829,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2020/07/28/Vue-应用单元测试的策略与实践/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/dusuwen/images/avatar.gif">
-      <meta itemprop="name" content="DrLouie">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/dusuwen/2020/07/28/Vue-应用单元测试的策略与实践/" class="post-title-link" itemprop="url">Vue 应用单元测试的策略与实践</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-07-28 15:50:18 / Modified: 15:51:11" itemprop="dateCreated datePublished" datetime="2020-07-28T15:50:18+08:00">2020-07-28</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="单元测试基础"><a href="#单元测试基础" class="headerlink" title="单元测试基础"></a>单元测试基础</h2><ul>
-<li>没有单元测试，开发者会倾向于不变动代码，导致代码腐化</li>
-<li>加快开发速度</li>
-<li>测试是重构的唯一保障
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/dusuwen/2020/07/28/Vue-应用单元测试的策略与实践/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -885,14 +898,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/dusuwen/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">32</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/dusuwen/tags/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
