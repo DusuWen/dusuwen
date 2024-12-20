@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/dusuwen/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/dusuwen/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/dusuwen/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/dusuwen/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/dusuwen/css/main.css">
+
+
+<link rel="stylesheet" href="/dusuwen/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"dusuwen.github.io","root":"/dusuwen/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="在本指南中，我们将介绍将包发不到npm所需的每一步骤。 这不是一个最简指南，我们将从一个空文件夹建立一个完全可用于生产环境的包，包括  Git 用于版本控制 TypeScript 用于编写代码并保持类型安全  Prettier 用于格式化我们的代码 @arethetypeswrong/cli 用于检查我们的导出 tsup 用于把我们的 TypeScript 代码编译为 CJS 和 ESM Vite">
+<meta name="keywords" content="译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="译-如何创建一个npm包">
+<meta property="og:url" content="https://dusuwen.github.io/dusuwen/2024/09/04/译-如何创建一个npm包/index.html">
+<meta property="og:site_name" content="博客">
+<meta property="og:description" content="在本指南中，我们将介绍将包发不到npm所需的每一步骤。 这不是一个最简指南，我们将从一个空文件夹建立一个完全可用于生产环境的包，包括  Git 用于版本控制 TypeScript 用于编写代码并保持类型安全  Prettier 用于格式化我们的代码 @arethetypeswrong/cli 用于检查我们的导出 tsup 用于把我们的 TypeScript 代码编译为 CJS 和 ESM Vite">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2024-12-20T07:40:37.325Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="译-如何创建一个npm包">
+<meta name="twitter:description" content="在本指南中，我们将介绍将包发不到npm所需的每一步骤。 这不是一个最简指南，我们将从一个空文件夹建立一个完全可用于生产环境的包，包括  Git 用于版本控制 TypeScript 用于编写代码并保持类型安全  Prettier 用于格式化我们的代码 @arethetypeswrong/cli 用于检查我们的导出 tsup 用于把我们的 TypeScript 代码编译为 CJS 和 ESM Vite">
+
+<link rel="canonical" href="https://dusuwen.github.io/dusuwen/2024/09/04/译-如何创建一个npm包/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>译-如何创建一个npm包 | 博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/dusuwen/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/dusuwen/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/dusuwen/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/dusuwen/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/dusuwen/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2024/09/04/译-如何创建一个npm包/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/dusuwen/images/avatar.gif">
+      <meta itemprop="name" content="DrLouie">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          译-如何创建一个npm包
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-09-04 14:05:49" itemprop="dateCreated datePublished" datetime="2024-09-04T14:05:49+08:00">2024-09-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-12-20 15:40:37" itemprop="dateModified" datetime="2024-12-20T15:40:37+08:00">2024-12-20</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在本指南中，我们将介绍将包发不到npm所需的每一步骤。</p>
+<p>这不是一个最简指南，我们将从一个空文件夹建立一个完全可用于生产环境的包，包括</p>
+<ul>
+<li>Git 用于版本控制</li>
+<li>TypeScript 用于编写代码并保持类型安全 </li>
+<li>Prettier 用于格式化我们的代码</li>
+<li>@arethetypeswrong/cli 用于检查我们的导出</li>
+<li>tsup 用于把我们的 TypeScript 代码编译为 CJS 和 ESM</li>
+<li>Vitest 用于运行测试</li>
+<li>GitHub Actions 用于运行 CI 集成</li>
+<li>Changesets 用于记录版本和发布包<a id="more"></a>
+
+</li>
+</ul>
+<h2 id="1-Git"><a href="#1-Git" class="headerlink" title="1: Git"></a>1: Git</h2><p>在本节中，我们将创建一个新的 Git 仓库，设置一个 .gitignore 文件，进行初次提交，然后在 GitHub 上创建一个新仓库，并将我们的代码推送到 GitHub。</p>
+<h3 id="1-1-初始化工程"><a href="#1-1-初始化工程" class="headerlink" title="1.1 初始化工程"></a>1.1 初始化工程</h3><p>执行下面命令初始化一个新的 git 工程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-设置-gitignore"><a href="#1-2-设置-gitignore" class="headerlink" title="1.2 设置.gitignore"></a>1.2 设置.gitignore</h3><p>在你的项目根目录创建一个.gitignore 文件并且添加以下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node_modules</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-初次提交"><a href="#1-3-初次提交" class="headerlink" title="1.3 初次提交"></a>1.3 初次提交</h3><p>运行以下命令来进行初次提交：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">"Initial commit"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-在-GitHub-创建新仓库"><a href="#1-4-在-GitHub-创建新仓库" class="headerlink" title="1.4 在 GitHub 创建新仓库"></a>1.4 在 GitHub 创建新仓库</h3><p>使用 GitHub CLI，运行以下命令来创建一个新仓库。在这个示例中，我选择了 <code>tt-package-demo</code> 作为仓库名称：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gh repo create tt-package-demo --<span class="built_in">source</span>=. --public</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-推送到-GitHub"><a href="#1-5-推送到-GitHub" class="headerlink" title="1.5 推送到 GitHub"></a>1.5 推送到 GitHub</h3><p>运行以下命令将代码推送到 GitHub：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push --<span class="built_in">set</span>-upstream origin main</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-package-json"><a href="#2-package-json" class="headerlink" title="2: package.json"></a>2: <code>package.json</code></h2><p>在本节中，我们将创建一个 <code>package.json</code> 文件，添加一个许可证字段，创建一个 <code>LICENSE</code> 文件，并添加一个 <code>README.md</code> 文件。</p>
+<h3 id="2-1-创建-package-json-文件"><a href="#2-1-创建-package-json-文件" class="headerlink" title="2.1: 创建 package.json 文件"></a>2.1: 创建 <code>package.json</code> 文件</h3><p>创建一个 <code>package.json</code> 文件，并填入以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"tt-package-demo"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"1.0.0"</span>,</span><br><span class="line">  <span class="attr">"description"</span>: <span class="string">"A demo package for Total TypeScript"</span>,</span><br><span class="line">  <span class="attr">"keywords"</span>: [<span class="string">"demo"</span>, <span class="string">"typescript"</span>],</span><br><span class="line">  <span class="attr">"homepage"</span>: <span class="string">"https://github.com/mattpocock/tt-package-demo"</span>,</span><br><span class="line">  <span class="attr">"bugs"</span>: &#123;</span><br><span class="line">    <span class="attr">"url"</span>: <span class="string">"https://github.com/mattpocock/tt-package-demo/issues"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"author"</span>: <span class="string">"Matt Pocock &lt;team@totaltypescript.com&gt; (https://totaltypescript.com)"</span>,</span><br><span class="line">  <span class="attr">"repository"</span>: &#123;</span><br><span class="line">    <span class="attr">"type"</span>: <span class="string">"git"</span>,</span><br><span class="line">    <span class="attr">"url"</span>: <span class="string">"git+https://github.com/mattpocock/tt-package-demo.git"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"files"</span>: [<span class="string">"dist"</span>],</span><br><span class="line">  <span class="attr">"type"</span>: <span class="string">"module"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>name</code> 是人们将用来安装你包的名称。它必须在 npm 上唯一。你可以创建组织作用域（例如 <code>@total-typescript/demo</code>），这些作用域是免费的，可以帮助使其唯一。</li>
+<li><code>version</code> 是你包的版本。它应该遵循语义版本控制：<code>0.0.1</code> 格式。每次发布新版本时，你应该增加此数字。</li>
+<li><code>description</code> 和 <code>keywords</code> 是你包的简短描述。它们会在 npm 注册表中的搜索结果中列出。</li>
+<li><code>homepage</code> 是你包主页的 URL。GitHub 仓库是一个不错的默认选择，或者如果你有文档网站，也可以使用。</li>
+<li><code>bugs</code> 是用户报告包问题的 URL。</li>
+<li><code>author</code> 是你！你可以选择添加你的电子邮件和网站。如果你有多个贡献者，你可以按照相同的格式将他们指定为一个贡献者数组。</li>
+<li><code>repository</code> 是你包的仓库 URL。这将在 npm 注册表中创建一个指向你 GitHub 仓库的链接。</li>
+<li><code>files</code> 是一个文件数组，指明人们安装你的包时应包含的文件。在本例中，我们包含了 <code>dist</code> 文件夹。<code>README.md</code>、<code>package.json</code> 和 <code>LICENSE</code> 默认包含在内。</li>
+<li><code>type</code> 设置为 <code>module</code>，以表明你的包使用 ECMAScript 模块，而不是 CommonJS 模块。</li>
+</ul>
+<h3 id="2-2-添加许可证字段"><a href="#2-2-添加许可证字段" class="headerlink" title="2.2: 添加许可证字段"></a>2.2: 添加许可证字段</h3><p>向你的 <code>package.json</code> 文件中添加一个许可证字段。选择一个许可证类型。这里选择了 MIT 许可证。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"license"</span>: <span class="string">"MIT"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-添加-LICENSE-文件"><a href="#2-3-添加-LICENSE-文件" class="headerlink" title="2.3: 添加 LICENSE 文件"></a>2.3: 添加 <code>LICENSE</code> 文件</h3><p>创建一个名为 <code>LICENSE</code>（无扩展名）的文件，包含你的许可证文本。对于 MIT 许可证，内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">MIT License</span><br><span class="line"></span><br><span class="line">Copyright (c) [year] [fullname]</span><br><span class="line"></span><br><span class="line">Permission is hereby granted, free of charge, to any person obtaining a copy</span><br><span class="line">of this software and associated documentation files (the &quot;Software&quot;), to deal</span><br><span class="line">in the Software without restriction, including without limitation the rights</span><br><span class="line">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span><br><span class="line">copies of the Software, and to permit persons to whom the Software is</span><br><span class="line">furnished to do so, subject to the following conditions:</span><br><span class="line"></span><br><span class="line">The above copyright notice and this permission notice shall be included in all</span><br><span class="line">copies or substantial portions of the Software.</span><br><span class="line"></span><br><span class="line">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span><br><span class="line">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span><br><span class="line">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span><br><span class="line">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span><br><span class="line">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span><br><span class="line">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span><br><span class="line">SOFTWARE.</span><br></pre></td></tr></table></figure>
+
+<p>将 <code>[year]</code> 和 <code>[fullname]</code> 占位符替换为当前年份和你的名字。</p>
+<h3 id="2-4-添加-README-md-文件"><a href="#2-4-添加-README-md-文件" class="headerlink" title="2.4: 添加 README.md 文件"></a>2.4: 添加 <code>README.md</code> 文件</h3><p>创建一个 <code>README.md</code> 文件，描述你的包。以下是一个示例：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="strong">**tt-package-demo**</span></span><br><span class="line"></span><br><span class="line">A demo package for Total TypeScript.</span><br></pre></td></tr></table></figure>
+
+<p>这将在人们查看你的包时显示在 npm 注册表中。</p>
+<h2 id="3-TypeScript"><a href="#3-TypeScript" class="headerlink" title="3: TypeScript"></a>3: TypeScript</h2><p>在本节中，我们将安装 TypeScript，设置 <code>tsconfig.json</code>，创建源文件，创建索引文件，设置构建脚本，运行构建，添加 <code>dist</code> 到 <code>.gitignore</code>，设置 CI 脚本，并为 DOM 配置我们的 <code>tsconfig.json</code>。</p>
+<h3 id="3-1-安装-TypeScript"><a href="#3-1-安装-TypeScript" class="headerlink" title="3.1: 安装 TypeScript"></a>3.1: 安装 TypeScript</h3><p>运行以下命令来安装 TypeScript：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev typescript</span><br></pre></td></tr></table></figure>
+
+<p>我们添加 <code>--save-dev</code> 是将 TypeScript 安装为开发依赖。这意味着在用户安装你的包时，TypeScript 不会被包含其中。</p>
+<h3 id="3-2-设置-tsconfig-json"><a href="#3-2-设置-tsconfig-json" class="headerlink" title="3.2: 设置 tsconfig.json"></a>3.2: 设置 <code>tsconfig.json</code></h3><p>创建一个 <code>tsconfig.json</code> 文件，并填入以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="comment">/* 基本选项： */</span></span><br><span class="line">    <span class="attr">"esModuleInterop"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"skipLibCheck"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"target"</span>: <span class="string">"es2022"</span>,</span><br><span class="line">    <span class="attr">"allowJs"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"resolveJsonModule"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"moduleDetection"</span>: <span class="string">"force"</span>,</span><br><span class="line">    <span class="attr">"isolatedModules"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"verbatimModuleSyntax"</span>: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 严格性 */</span></span><br><span class="line">    <span class="attr">"strict"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"noUncheckedIndexedAccess"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"noImplicitOverride"</span>: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 如果使用 TypeScript 进行转译： */</span></span><br><span class="line">    <span class="attr">"module"</span>: <span class="string">"NodeNext"</span>,</span><br><span class="line">    <span class="attr">"outDir"</span>: <span class="string">"dist"</span>,</span><br><span class="line">    <span class="attr">"rootDir"</span>: <span class="string">"src"</span>,</span><br><span class="line">    <span class="attr">"sourceMap"</span>: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 并且如果你在构建一个库： */</span></span><br><span class="line">    <span class="attr">"declaration"</span>: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 并且如果你在单仓库中构建一个库： */</span></span><br><span class="line">    <span class="attr">"declarationMap"</span>: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这些选项在我的 <a href="链接">TSConfig 速查表</a> 中有详细说明。</p>
+<h3 id="3-3-为-DOM-配置-tsconfig-json"><a href="#3-3-为-DOM-配置-tsconfig-json" class="headerlink" title="3.3: 为 DOM 配置 tsconfig.json"></a>3.3: 为 DOM 配置 <code>tsconfig.json</code></h3><p>如果你的代码在 DOM 中运行（即需要访问 <code>document</code>、<code>window</code> 或 <code>localStorage</code> 等），请跳过此步骤。</p>
+<p>如果你的代码不需要访问 DOM API，请在 <code>tsconfig.json</code> 中添加以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="comment">// ...其他选项</span></span><br><span class="line">    <span class="attr">"lib"</span>: [<span class="string">"es2022"</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这将防止 DOM 类型定义在你的代码中可用。</p>
+<p>如果你不确定，跳过此步骤。</p>
+<h3 id="3-4-创建源文件"><a href="#3-4-创建源文件" class="headerlink" title="3.4: 创建源文件"></a>3.4: 创建源文件</h3><p>创建一个 <code>src/utils.ts</code> 文件，并添加以下内容：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> add = <span class="function">(<span class="params">a: <span class="built_in">number</span>, b: <span class="built_in">number</span></span>) =&gt;</span> a + b;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-5-创建索引文件"><a href="#3-5-创建索引文件" class="headerlink" title="3.5: 创建索引文件"></a>3.5: 创建索引文件</h3><p>创建一个 <code>src/index.ts</code> 文件，并添加以下内容：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> &#123; add &#125; <span class="keyword">from</span> <span class="string">"./utils.js"</span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>.js</code> 扩展名看起来有些奇怪。本文中有更多解释。</p>
+<h3 id="3-6-设置构建脚本"><a href="#3-6-设置构建脚本" class="headerlink" title="3.6: 设置构建脚本"></a>3.6: 设置构建脚本</h3><p>在 <code>package.json</code> 中添加一个 <code>scripts</code> 对象，并填入以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"build"</span>: <span class="string">"tsc"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这将编译你的 TypeScript 代码为 JavaScript。</p>
+<h3 id="3-7-运行构建"><a href="#3-7-运行构建" class="headerlink" title="3.7: 运行构建"></a>3.7: 运行构建</h3><p>运行以下命令来编译你的 TypeScript 代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p>这将创建一个 <code>dist</code> 文件夹，里面包含编译后的 JavaScript 代码。</p>
+<h3 id="3-8-将-dist-添加到-gitignore"><a href="#3-8-将-dist-添加到-gitignore" class="headerlink" title="3.8: 将 dist 添加到 .gitignore"></a>3.8: 将 <code>dist</code> 添加到 <code>.gitignore</code></h3><p>在你的 <code>.gitignore</code> 文件中添加 <code>dist</code> 文件夹：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dist</span><br></pre></td></tr></table></figure>
+
+<p>这将防止你的编译代码被包含在 Git 仓库中。</p>
+<h3 id="3-9-设置-CI-脚本"><a href="#3-9-设置-CI-脚本" class="headerlink" title="3.9: 设置 CI 脚本"></a>3.9: 设置 CI 脚本</h3><p>在 <code>package.json</code> 中添加一个 <code>ci</code> 脚本，并填入以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"ci"</span>: <span class="string">"npm run build"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这为在 CI 上运行所有必要操作提供了一个快捷方式。</p>
+<p>这样，你已经完成了 TypeScript 的安装和配置，设置了必要的构建脚本，并确保编译后的代码不会被提交到 Git 仓库中。</p>
+<h2 id="4-Prettier"><a href="#4-Prettier" class="headerlink" title="4: Prettier"></a>4: Prettier</h2><p>在本节中，我们将安装 Prettier，设置 <code>.prettierrc</code> 文件，设置格式化脚本，运行格式化脚本，设置检查格式脚本，将检查格式脚本添加到 CI 脚本中，并运行 CI 脚本。</p>
+<p>Prettier 是一个代码格式化工具，它会自动将你的代码格式化为一致的风格，从而使代码更易于阅读和维护。</p>
+<h3 id="4-1-安装-Prettier"><a href="#4-1-安装-Prettier" class="headerlink" title="4.1: 安装 Prettier"></a>4.1: 安装 Prettier</h3><p>运行以下命令来安装 Prettier：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev prettier</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-设置-prettierrc"><a href="#4-2-设置-prettierrc" class="headerlink" title="4.2: 设置 .prettierrc"></a>4.2: 设置 <code>.prettierrc</code></h3><p>创建一个 <code>.prettierrc</code> 文件，并添加以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"semi"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"singleQuote"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"trailingComma"</span>: <span class="string">"all"</span>,</span><br><span class="line">  <span class="attr">"printWidth"</span>: <span class="number">80</span>,</span><br><span class="line">  <span class="attr">"tabWidth"</span>: <span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>你可以在此文件中添加更多选项以自定义 Prettier 的行为。完整的选项列表可以在<a href="链接">这里</a>找到。</p>
+<h3 id="4-3-设置格式化脚本"><a href="#4-3-设置格式化脚本" class="headerlink" title="4.3: 设置格式化脚本"></a>4.3: 设置格式化脚本</h3><p>在 <code>package.json</code> 中添加一个 <code>format</code> 脚本，并填入以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"format"</span>: <span class="string">"prettier --write ."</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这将使用 Prettier 格式化项目中的所有文件。</p>
+<h3 id="4-4-运行格式化脚本"><a href="#4-4-运行格式化脚本" class="headerlink" title="4.4: 运行格式化脚本"></a>4.4: 运行格式化脚本</h3><p>运行以下命令来格式化项目中的所有文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run format</span><br></pre></td></tr></table></figure>
+
+<p>你可能会注意到一些文件发生了变化。使用以下命令将它们提交：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">"Format code with Prettier"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-5-设置检查格式脚本"><a href="#4-5-设置检查格式脚本" class="headerlink" title="4.5: 设置检查格式脚本"></a>4.5: 设置检查格式脚本</h3><p>在 <code>package.json</code> 中添加一个 <code>check-format</code> 脚本，并填入以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"check-format"</span>: <span class="string">"prettier --check ."</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这将检查项目中的所有文件是否格式化正确。</p>
+<h3 id="4-6-将其添加到-CI-脚本"><a href="#4-6-将其添加到-CI-脚本" class="headerlink" title="4.6: 将其添加到 CI 脚本"></a>4.6: 将其添加到 CI 脚本</h3><p>在 <code>package.json</code> 中的 CI 脚本中添加 <code>check-format</code> 脚本：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"ci"</span>: <span class="string">"npm run build &amp;&amp; npm run check-format"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这将使 <code>check-format</code> 脚本成为 CI 过程的一部分。</p>
+<p>通过这些步骤，你已经成功配置了 Prettier，以确保你的代码风格一致，并将其集成到了 CI 流程中。</p>
+<h2 id="5-exports、main-和-arethetypeswrong-cli"><a href="#5-exports、main-和-arethetypeswrong-cli" class="headerlink" title="5: exports、main 和 @arethetypeswrong/cli"></a>5: <code>exports</code>、<code>main</code> 和 <code>@arethetypeswrong/cli</code></h2><p>在本节中，我们将安装 <code>@arethetypeswrong/cli</code>，设置 <code>check-exports</code> 脚本，运行 <code>check-exports</code> 脚本，设置 <code>main</code> 字段，再次运行 <code>check-exports</code> 脚本，设置 CI 脚本并运行。</p>
+<p><code>@arethetypeswrong/cli</code> 是一个工具，用于检查你的包的导出是否正确。这非常重要，因为错误的导出会导致使用你包的用户遇到问题。</p>
+<h3 id="5-1-安装-arethetypeswrong-cli"><a href="#5-1-安装-arethetypeswrong-cli" class="headerlink" title="5.1: 安装 @arethetypeswrong/cli"></a>5.1: 安装 <code>@arethetypeswrong/cli</code></h3><p>运行以下命令来安装 <code>@arethetypeswrong/cli</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev @arethetypeswrong/cli</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-设置-check-exports-脚本"><a href="#5-2-设置-check-exports-脚本" class="headerlink" title="5.2: 设置 check-exports 脚本"></a>5.2: 设置 <code>check-exports</code> 脚本</h3><p>在 <code>package.json</code> 中添加一个 <code>check-exports</code> 脚本，并填入以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"check-exports"</span>: <span class="string">"attw --pack ."</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这将检查你的包的所有导出是否正确。</p>
+<h3 id="5-3-运行-check-exports-脚本"><a href="#5-3-运行-check-exports-脚本" class="headerlink" title="5.3: 运行 check-exports 脚本"></a>5.3: 运行 <code>check-exports</code> 脚本</h3><p>运行以下命令来检查包的所有导出是否正确：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run check-exports</span><br></pre></td></tr></table></figure>
+
+<p>你应该会注意到出现了多个错误：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌───────────────────┬──────────────────────┐</span><br><span class="line">│                   │ &quot;tt-package-demo&quot;    │</span><br><span class="line">├───────────────────┼──────────────────────┤</span><br><span class="line">│ node10            │ 💀 Resolution failed │</span><br><span class="line">├───────────────────┼──────────────────────┤</span><br><span class="line">│ node16 (from CJS) │ 💀 Resolution failed │</span><br><span class="line">├───────────────────┼──────────────────────┤</span><br><span class="line">│ node16 (from ESM) │ 💀 Resolution failed │</span><br><span class="line">├───────────────────┼──────────────────────┤</span><br><span class="line">│ bundler           │ 💀 Resolution failed │</span><br><span class="line">└───────────────────┴──────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p>这表明没有版本的 Node 或任何打包工具能够使用我们的包。</p>
+<p>让我们来修复这个问题。</p>
+<hr>
+<h3 id="5-4-设置-main-字段"><a href="#5-4-设置-main-字段" class="headerlink" title="5.4: 设置 main 字段"></a>5.4: 设置 <code>main</code> 字段</h3><p>在 <code>package.json</code> 中添加一个 <code>main</code> 字段，并填入以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"main"</span>: <span class="string">"dist/index.js"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这告诉 Node 在哪里找到你的包的入口点。</p>
+<h3 id="5-5-再次运行-check-exports-脚本"><a href="#5-5-再次运行-check-exports-脚本" class="headerlink" title="5.5: 再次运行 check-exports 脚本"></a>5.5: 再次运行 <code>check-exports</code> 脚本</h3><p>运行以下命令再次检查包的所有导出是否正确：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run check-exports</span><br></pre></td></tr></table></figure>
+
+<p>你应该会注意到只剩下一个警告：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌───────────────────┬──────────────────────────────┐</span><br><span class="line">│                   │ &quot;tt-package-demo&quot;            │</span><br><span class="line">├───────────────────┼──────────────────────────────┤</span><br><span class="line">│ node10            │ 🟢                           │</span><br><span class="line">├───────────────────┼──────────────────────────────┤</span><br><span class="line">│ node16 (from CJS) │ ⚠️ ESM (dynamic import only) │</span><br><span class="line">├───────────────────┼──────────────────────────────┤</span><br><span class="line">│ node16 (from ESM) │ 🟢 (ESM)                     │</span><br><span class="line">├───────────────────┼──────────────────────────────┤</span><br><span class="line">│ bundler           │ 🟢                           │</span><br><span class="line">└───────────────────┴──────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p>这表明我们的包与运行 ESM 的系统兼容。使用 CJS 的人（通常在旧系统中）需要使用动态导入来引入它。</p>
+<hr>
+<h3 id="5-6-修复-CJS-警告"><a href="#5-6-修复-CJS-警告" class="headerlink" title="5.6: 修复 CJS 警告"></a>5.6: 修复 CJS 警告</h3><p>如果你不想支持 CJS（我推荐这样做），将 <code>check-exports</code> 脚本更改为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"check-exports"</span>: <span class="string">"attw --pack . --ignore-rules=cjs-resolves-to-esm"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，运行 <code>check-exports</code> 将显示所有内容都为绿色：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌───────────────────┬───────────────────┐</span><br><span class="line">│                   │ &quot;tt-package-demo&quot; │</span><br><span class="line">├───────────────────┼───────────────────┤</span><br><span class="line">│ node10            │ 🟢                │</span><br><span class="line">├───────────────────┼───────────────────┤</span><br><span class="line">│ node16 (from CJS) │ 🟢 (ESM)          │</span><br><span class="line">├───────────────────┼───────────────────┤</span><br><span class="line">│ node16 (from ESM) │ 🟢 (ESM)          │</span><br><span class="line">├───────────────────┼───────────────────┤</span><br><span class="line">│ bundler           │ 🟢                │</span><br><span class="line">└───────────────────┴───────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p>如果你更愿意同时发布 CJS 和 ESM，请跳过此步骤。</p>
+<h3 id="5-7-将-check-exports-脚本添加到-CI-脚本中"><a href="#5-7-将-check-exports-脚本添加到-CI-脚本中" class="headerlink" title="5.7: 将 check-exports 脚本添加到 CI 脚本中"></a>5.7: 将 <code>check-exports</code> 脚本添加到 CI 脚本中</h3><p>在 <code>package.json</code> 中的 CI 脚本中添加 <code>check-exports</code> 脚本：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"ci"</span>: <span class="string">"npm run build &amp;&amp; npm run check-format &amp;&amp; npm run check-exports"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过这些步骤，你已经成功配置了 <code>@arethetypeswrong/cli</code> 来检查包的导出，并将其集成到了 CI 流程中，确保你的包与不同的环境兼容。</p>
+<h2 id="6-使用-tsup-实现双重发布"><a href="#6-使用-tsup-实现双重发布" class="headerlink" title="6: 使用 tsup 实现双重发布"></a>6: 使用 <code>tsup</code> 实现双重发布</h2><p>如果你想发布 CJS 和 ESM 两种格式的代码，可以使用 <code>tsup</code>。<code>tsup</code> 是基于 <code>esbuild</code> 构建的工具，它可以将你的 TypeScript 代码编译成两种格式。</p>
+<p>我的个人建议是跳过此步骤，只发布 ES Modules。这样可以简化你的设置，避免双重发布带来的问题，如双包危害（Dual Package Hazard）。</p>
+<p>但是，如果你想继续进行，以下是具体步骤。</p>
+<h3 id="6-1-安装-tsup"><a href="#6-1-安装-tsup" class="headerlink" title="6.1: 安装 tsup"></a>6.1: 安装 <code>tsup</code></h3><p>运行以下命令来安装 <code>tsup</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev tsup</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-创建-tsup-config-ts-文件"><a href="#6-2-创建-tsup-config-ts-文件" class="headerlink" title="6.2: 创建 tsup.config.ts 文件"></a>6.2: 创建 <code>tsup.config.ts</code> 文件</h3><p>创建一个 <code>tsup.config.ts</code> 文件，并填入以下内容：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineConfig &#125; <span class="keyword">from</span> <span class="string">"tsup"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> defineConfig(&#123;</span><br><span class="line">  entryPoints: [<span class="string">"src/index.ts"</span>],</span><br><span class="line">  format: [<span class="string">"cjs"</span>, <span class="string">"esm"</span>],</span><br><span class="line">  dts: <span class="literal">true</span>,</span><br><span class="line">  outDir: <span class="string">"dist"</span>,</span><br><span class="line">  clean: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>entryPoints</code> 是一个数组，指定你的包的入口点。在本例中，我们使用 <code>src/index.ts</code>。</li>
+<li><code>format</code> 是一个数组，指定输出的格式。我们使用 <code>cjs</code>（CommonJS）和 <code>esm</code>（ECMAScript modules）。</li>
+<li><code>dts</code> 是一个布尔值，告诉 <code>tsup</code> 生成声明文件。</li>
+<li><code>outDir</code> 是输出编译代码的目录。</li>
+<li><code>clean</code> 告诉 <code>tsup</code> 在构建之前清理输出目录。</li>
+</ul>
+<h3 id="6-3-修改-build-脚本"><a href="#6-3-修改-build-脚本" class="headerlink" title="6.3: 修改 build 脚本"></a>6.3: 修改 <code>build</code> 脚本</h3><p>在 <code>package.json</code> 中将 <code>build</code> 脚本修改为以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"build"</span>: <span class="string">"tsup"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们现在将使用 <code>tsup</code> 编译代码，而不是 <code>tsc</code>。</p>
+<h3 id="6-4-添加-exports-字段"><a href="#6-4-添加-exports-字段" class="headerlink" title="6.4: 添加 exports 字段"></a>6.4: 添加 <code>exports</code> 字段</h3><p>在 <code>package.json</code> 中添加 <code>exports</code> 字段，并填入以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"exports"</span>: &#123;</span><br><span class="line">    <span class="attr">"./package.json"</span>: <span class="string">"./package.json"</span>,</span><br><span class="line">    <span class="attr">"."</span>: &#123;</span><br><span class="line">      <span class="attr">"import"</span>: <span class="string">"./dist/index.js"</span>,</span><br><span class="line">      <span class="attr">"default"</span>: <span class="string">"./dist/index.cjs"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>exports</code> 字段告诉使用你的包的程序如何找到 CJS 和 ESM 版本。在本例中，我们将使用 <code>import</code> 的用户指向 <code>dist/index.js</code>，将使用 <code>require</code> 的用户指向 <code>dist/index.cjs</code>。</p>
+<p>建议将 <code>./package.json</code> 也添加到 <code>exports</code> 字段中，因为某些工具需要轻松访问你的 <code>package.json</code> 文件。</p>
+<h3 id="6-5-再次运行-check-exports-脚本"><a href="#6-5-再次运行-check-exports-脚本" class="headerlink" title="6.5: 再次运行 check-exports 脚本"></a>6.5: 再次运行 <code>check-exports</code> 脚本</h3><p>运行以下命令来检查包的所有导出是否正确：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run check-exports</span><br></pre></td></tr></table></figure>
+
+<p>现在，所有内容都显示为绿色：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌───────────────────┬───────────────────┐</span><br><span class="line">│                   │ &quot;tt-package-demo&quot; │</span><br><span class="line">├───────────────────┼───────────────────┤</span><br><span class="line">│ node10            │ 🟢                │</span><br><span class="line">├───────────────────┼───────────────────┤</span><br><span class="line">│ node16 (from CJS) │ 🟢 (CJS)          │</span><br><span class="line">├───────────────────┼───────────────────┤</span><br><span class="line">│ node16 (from ESM) │ 🟢 (ESM)          │</span><br><span class="line">├───────────────────┼───────────────────┤</span><br><span class="line">│ bundler           │ 🟢                │</span><br><span class="line">└───────────────────┴───────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-6-将-TypeScript-用作-Linter"><a href="#6-6-将-TypeScript-用作-Linter" class="headerlink" title="6.6: 将 TypeScript 用作 Linter"></a>6.6: 将 TypeScript 用作 Linter</h3><p>由于我们不再使用 <code>tsc</code> 来编译代码，而 <code>tsup</code> 也不会检查代码中的错误（它只是将代码转换为 JavaScript），这意味着如果我们的代码中存在 TypeScript 错误，CI 脚本不会报错。</p>
+<p>让我们修复这个问题。</p>
+<h4 id="6-6-1-在-tsconfig-json-中添加-noEmit"><a href="#6-6-1-在-tsconfig-json-中添加-noEmit" class="headerlink" title="6.6.1: 在 tsconfig.json 中添加 noEmit"></a>6.6.1: 在 <code>tsconfig.json</code> 中添加 <code>noEmit</code></h4><p>在 <code>tsconfig.json</code> 中添加 <code>noEmit</code> 字段：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="comment">// ...other options</span></span><br><span class="line">    <span class="attr">"noEmit"</span>: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-6-2-删除-tsconfig-json-中未使用的字段"><a href="#6-6-2-删除-tsconfig-json-中未使用的字段" class="headerlink" title="6.6.2: 删除 tsconfig.json 中未使用的字段"></a>6.6.2: 删除 <code>tsconfig.json</code> 中未使用的字段</h4><p>从 <code>tsconfig.json</code> 中删除以下字段：</p>
+<ul>
+<li><code>outDir</code></li>
+<li><code>rootDir</code></li>
+<li><code>sourceMap</code></li>
+<li><code>declaration</code></li>
+<li><code>declarationMap</code></li>
+</ul>
+<p>在我们的新 <code>linting</code> 设置中，这些字段已不再需要。</p>
+<h4 id="6-6-3-可选：将-module-改为-Preserve"><a href="#6-6-3-可选：将-module-改为-Preserve" class="headerlink" title="6.6.3: 可选：将 module 改为 Preserve"></a>6.6.3: 可选：将 <code>module</code> 改为 <code>Preserve</code></h4><p>可选地，你现在可以将 <code>module</code> 更改为 <code>Preserve</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="comment">// ...other options</span></span><br><span class="line">    <span class="attr">"module"</span>: <span class="string">"Preserve"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这意味着你将不再需要使用 <code>.js</code> 扩展名来导入文件。这意味着 <code>index.ts</code> 可以如下所示：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">"./utils"</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-6-4-添加-lint-脚本"><a href="#6-6-4-添加-lint-脚本" class="headerlink" title="6.6.4: 添加 lint 脚本"></a>6.6.4: 添加 <code>lint</code> 脚本</h4><p>在 <code>package.json</code> 中添加一个 <code>lint</code> 脚本，并填入以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"lint"</span>: <span class="string">"tsc"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这将运行 TypeScript 作为 linter。</p>
+<h4 id="6-6-5-将-lint-添加到-CI-脚本中"><a href="#6-6-5-将-lint-添加到-CI-脚本中" class="headerlink" title="6.6.5: 将 lint 添加到 CI 脚本中"></a>6.6.5: 将 <code>lint</code> 添加到 CI 脚本中</h4><p>在 <code>package.json</code> 中的 CI 脚本中添加 <code>lint</code> 脚本：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"ci"</span>: <span class="string">"npm run build &amp;&amp; npm run check-format &amp;&amp; npm run check-exports &amp;&amp; npm run lint"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，我们可以在 CI 过程中捕获 TypeScript 错误。通过以上步骤，你已经成功配置了 <code>tsup</code> 来实现 CJS 和 ESM 的双重发布，并将 TypeScript 作为 linter 集成到 CI 流程中。</p>
+<h2 id="7-使用-Vitest-进行测试"><a href="#7-使用-Vitest-进行测试" class="headerlink" title="7: 使用 Vitest 进行测试"></a>7: 使用 Vitest 进行测试</h2><p>在这一部分，我们将安装 Vitest，创建测试，设置测试脚本，运行测试脚本，设置开发脚本，并将测试脚本添加到我们的 CI 脚本中。Vitest 是一个现代的测试运行器，支持 ESM 和 TypeScript，类似于 Jest，但更轻便和高效。</p>
+<h3 id="7-1-安装-Vitest"><a href="#7-1-安装-Vitest" class="headerlink" title="7.1: 安装 Vitest"></a>7.1: 安装 Vitest</h3><p>运行以下命令来安装 Vitest：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev vitest</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-创建一个测试文件"><a href="#7-2-创建一个测试文件" class="headerlink" title="7.2: 创建一个测试文件"></a>7.2: 创建一个测试文件</h3><p>在 <code>src/utils.test.ts</code> 文件中编写以下内容：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; add &#125; <span class="keyword">from</span> <span class="string">"./utils.js"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; test, expect &#125; <span class="keyword">from</span> <span class="string">"vitest"</span>;</span><br><span class="line"></span><br><span class="line">test(<span class="string">"add"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  expect(add(<span class="number">1</span>, <span class="number">2</span>)).toBe(<span class="number">3</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这是一个简单的测试，它检查 <code>add</code> 函数是否返回正确的值。</p>
+<h3 id="7-3-设置测试脚本"><a href="#7-3-设置测试脚本" class="headerlink" title="7.3: 设置测试脚本"></a>7.3: 设置测试脚本</h3><p>在 <code>package.json</code> 中添加以下 <code>test</code> 脚本：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"test"</span>: <span class="string">"vitest run"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>vitest run</code> 将在项目中运行所有测试，且不会进行文件监听。</p>
+<h3 id="7-4-运行测试脚本"><a href="#7-4-运行测试脚本" class="headerlink" title="7.4: 运行测试脚本"></a>7.4: 运行测试脚本</h3><p>运行以下命令来执行测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>你应该看到如下输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">✓ src/utils.test.ts (1)</span><br><span class="line">  ✓ add</span><br><span class="line"></span><br><span class="line">Test Files  1 passed (1)</span><br><span class="line">     Tests  1 passed (1)</span><br></pre></td></tr></table></figure>
+
+<p>这表明你的测试成功通过。</p>
+<h3 id="7-5-设置开发脚本"><a href="#7-5-设置开发脚本" class="headerlink" title="7.5: 设置开发脚本"></a>7.5: 设置开发脚本</h3><p>在开发过程中，通常会运行测试并让它监听文件的变化。为此，在 <code>package.json</code> 中添加一个 <code>dev</code> 脚本：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"dev"</span>: <span class="string">"vitest"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这将使 Vitest 进入文件监听模式，便于开发时自动运行测试。</p>
+<h3 id="7-6-将测试脚本添加到-CI-脚本"><a href="#7-6-将测试脚本添加到-CI-脚本" class="headerlink" title="7.6: 将测试脚本添加到 CI 脚本"></a>7.6: 将测试脚本添加到 CI 脚本</h3><p>在 <code>package.json</code> 中，将 <code>test</code> 脚本添加到 CI 流程中：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"ci"</span>: <span class="string">"npm run build &amp;&amp; npm run check-format &amp;&amp; npm run check-exports &amp;&amp; npm run lint &amp;&amp; npm run test"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，你已经成功集成了 Vitest 进行测试，并确保测试会作为 CI 流程的一部分进行。通过文件监听模式，你可以在开发过程中实时检查代码的正确性。</p>
+<h2 id="8-Set-up-CI-with-GitHub-Actions"><a href="#8-Set-up-CI-with-GitHub-Actions" class="headerlink" title="8: Set up CI with GitHub Actions"></a>8: Set up CI with GitHub Actions</h2><p>在这一部分，我们将创建一个 GitHub Actions 工作流，在每次提交和拉取请求时运行 CI 流程。这是确保我们的包始终处于正常工作状态的重要步骤。</p>
+<h3 id="8-1-创建工作流"><a href="#8-1-创建工作流" class="headerlink" title="8.1: 创建工作流"></a>8.1: 创建工作流</h3><p>在项目的根目录下创建 <code>.github/workflows/ci.yml</code> 文件，内容如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">CI</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">pull_request:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">main</span></span><br><span class="line"></span><br><span class="line"><span class="attr">concurrency:</span></span><br><span class="line">  <span class="attr">group:</span> <span class="string">$&#123;&#123;</span> <span class="string">github.workflow</span> <span class="string">&#125;&#125;-$&#123;&#123;</span> <span class="string">github.ref</span> <span class="string">&#125;&#125;</span></span><br><span class="line">  <span class="attr">cancel-in-progress:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">ci:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v4</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Use</span> <span class="string">Node.js</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">actions/setup-node@v4</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">node-version:</span> <span class="string">"20"</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Install</span> <span class="string">dependencies</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">npm</span> <span class="string">install</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Run</span> <span class="string">CI</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">ci</span></span><br></pre></td></tr></table></figure>
+
+<p>这个文件为 GitHub 提供了运行 CI 流程的指令。</p>
+<ul>
+<li><strong>name</strong>：定义工作流的名称为 <code>CI</code>。</li>
+<li><strong>on</strong>：指定工作流何时运行。这里设置为在 <code>main</code> 分支上的每次提交和拉取请求时运行。</li>
+<li><strong>concurrency</strong>：确保同一分支上不会同时运行多个工作流实例，<code>cancel-in-progress</code> 参数用来取消正在运行的旧实例。</li>
+<li><strong>jobs</strong>：定义要运行的一组任务。在这个例子中，我们有一个名为 <code>ci</code> 的任务。</li>
+<li><strong>actions/checkout@v4</strong>：拉取代码到工作环境。</li>
+<li><strong>actions/setup-node@v4</strong>：设置 Node.js 和 npm 环境。</li>
+<li><strong>npm install</strong>：安装项目依赖。</li>
+<li><strong>npm run ci</strong>：运行项目的 CI 脚本。</li>
+</ul>
+<p>如果 CI 过程中的任何部分失败，GitHub 将在提交旁边显示红色的 “X”，表示工作流失败。</p>
+<h3 id="8-2-测试工作流"><a href="#8-2-测试工作流" class="headerlink" title="8.2: 测试工作流"></a>8.2: 测试工作流</h3><p>将你的更改推送到 GitHub，然后检查仓库的 <strong>Actions</strong> 选项卡。你应该会看到工作流正在运行。</p>
+<p>这确保每次提交和每个拉取请求都将自动触发 CI 流程，为你提供对代码的持续检查与反馈。</p>
+<h2 id="9-Publishing-with-Changesets"><a href="#9-Publishing-with-Changesets" class="headerlink" title="9: Publishing with Changesets"></a>9: Publishing with Changesets</h2><p>在这一部分，我们将安装 Changesets、初始化它、设置发布脚本，并最终将包发布到 npm。Changesets 是一个帮助你版本化并发布包的工具，非常适合将代码发布到 npm。</p>
+<h3 id="9-1-安装-changesets-cli"><a href="#9-1-安装-changesets-cli" class="headerlink" title="9.1: 安装 @changesets/cli"></a>9.1: 安装 @changesets/cli</h3><p>运行以下命令安装 Changesets CLI：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev @changesets/cli</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-2-初始化-Changesets"><a href="#9-2-初始化-Changesets" class="headerlink" title="9.2: 初始化 Changesets"></a>9.2: 初始化 Changesets</h3><p>运行以下命令来初始化 Changesets：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx changeset init</span><br></pre></td></tr></table></figure>
+
+<p>此命令将创建一个 <code>.changeset</code> 文件夹，其中包含 <code>config.json</code> 文件，你的 changeset 将存储在此文件夹中。</p>
+<h3 id="9-3-设置-Changeset-发布为公开"><a href="#9-3-设置-Changeset-发布为公开" class="headerlink" title="9.3: 设置 Changeset 发布为公开"></a>9.3: 设置 Changeset 发布为公开</h3><p>在 <code>.changeset/config.json</code> 中，将 <code>access</code> 字段修改为 <code>public</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"access"</span>: <span class="string">"public"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这一步确保你的包能够公开发布到 npm。</p>
+<h3 id="9-4-将-commit-设置为-true"><a href="#9-4-将-commit-设置为-true" class="headerlink" title="9.4: 将 commit 设置为 true"></a>9.4: 将 commit 设置为 true</h3><p>在 <code>.changeset/config.json</code> 中，将 <code>commit</code> 字段设置为 <code>true</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"commit"</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样在版本发布后，changeset 会自动提交到你的代码库。</p>
+<h3 id="9-5-设置-local-release-脚本"><a href="#9-5-设置-local-release-脚本" class="headerlink" title="9.5: 设置 local-release 脚本"></a>9.5: 设置 local-release 脚本</h3><p>在 <code>package.json</code> 中添加 <code>local-release</code> 脚本：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"local-release"</span>: <span class="string">"changeset version &amp;&amp; changeset publish"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个脚本将运行你的 CI 流程并发布包到 npm，你可以在本地运行此命令发布新的版本。</p>
+<h3 id="9-6-在-prepublishOnly-中运行-CI"><a href="#9-6-在-prepublishOnly-中运行-CI" class="headerlink" title="9.6: 在 prepublishOnly 中运行 CI"></a>9.6: 在 <code>prepublishOnly</code> 中运行 CI</h3><p>在 <code>package.json</code> 中添加 <code>prepublishOnly</code> 脚本：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"prepublishOnly"</span>: <span class="string">"npm run ci"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这会在发布包之前自动运行 CI 流程，确保代码没有问题。</p>
+<h3 id="9-7-添加-changeset"><a href="#9-7-添加-changeset" class="headerlink" title="9.7: 添加 changeset"></a>9.7: 添加 changeset</h3><p>运行以下命令添加 changeset：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx changeset</span><br></pre></td></tr></table></figure>
+
+<p>这会打开一个交互式提示，帮助你创建一个新的 changeset。你可以将这个发布标记为 <code>patch</code> 版本，并添加类似于 “Initial release” 的描述。</p>
+<h3 id="9-8-提交你的更改"><a href="#9-8-提交你的更改" class="headerlink" title="9.8: 提交你的更改"></a>9.8: 提交你的更改</h3><p>将更改提交到代码库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">"Prepare for initial release"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="9-9-运行-local-release-脚本"><a href="#9-9-运行-local-release-脚本" class="headerlink" title="9.9: 运行 local-release 脚本"></a>9.9: 运行 local-release 脚本</h3><p>运行以下命令发布你的包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run <span class="built_in">local</span>-release</span><br></pre></td></tr></table></figure>
+
+<p>这个命令会运行 CI 流程、版本化包并发布到 npm。在代码库中还会创建一个 <code>CHANGELOG.md</code> 文件，详细说明每次发布的更改。</p>
+<h3 id="9-10-查看你的包"><a href="#9-10-查看你的包" class="headerlink" title="9.10: 查看你的包"></a>9.10: 查看你的包</h3><p>打开以下地址查看你的包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://npmjs.com/package/&lt;your-package-name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>恭喜你！你已经成功将包发布到 npm。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>现在，你已经完成了包的完整设置，包含了：</p>
+<ul>
+<li>TypeScript 项目配置</li>
+<li>Prettier，用于格式化和检查代码格式</li>
+<li>@arethetypeswrong/cli，用于检查包的导出是否正确</li>
+<li>tsup，用于将 TypeScript 编译为 JavaScript</li>
+<li>vitest，用于运行测试</li>
+<li>GitHub Actions，用于 CI 流程</li>
+<li>Changesets，用于版本化和发布包</li>
+</ul>
+<p>后续还可以设置 Changesets GitHub action 和 PR bot，让贡献者在提交 PR 时自动推荐添加 changeset。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/dusuwen/tags/译/" rel="tag"># 译</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/dusuwen/2024/08/12/简单了解docker/" rel="prev" title="简单了解docker">
+      <i class="fa fa-chevron-left"></i> 简单了解docker
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/dusuwen/2024/12/20/hello-world/" rel="next" title="Hello World">
+      Hello World <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Git"><span class="nav-number">1.</span> <span class="nav-text">1: Git</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-初始化工程"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 初始化工程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-设置-gitignore"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 设置.gitignore</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-初次提交"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 初次提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-在-GitHub-创建新仓库"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 在 GitHub 创建新仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-推送到-GitHub"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 推送到 GitHub</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-package-json"><span class="nav-number">2.</span> <span class="nav-text">2: package.json</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-创建-package-json-文件"><span class="nav-number">2.1.</span> <span class="nav-text">2.1: 创建 package.json 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-添加许可证字段"><span class="nav-number">2.2.</span> <span class="nav-text">2.2: 添加许可证字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-添加-LICENSE-文件"><span class="nav-number">2.3.</span> <span class="nav-text">2.3: 添加 LICENSE 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-添加-README-md-文件"><span class="nav-number">2.4.</span> <span class="nav-text">2.4: 添加 README.md 文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-TypeScript"><span class="nav-number">3.</span> <span class="nav-text">3: TypeScript</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-安装-TypeScript"><span class="nav-number">3.1.</span> <span class="nav-text">3.1: 安装 TypeScript</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-设置-tsconfig-json"><span class="nav-number">3.2.</span> <span class="nav-text">3.2: 设置 tsconfig.json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-为-DOM-配置-tsconfig-json"><span class="nav-number">3.3.</span> <span class="nav-text">3.3: 为 DOM 配置 tsconfig.json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-创建源文件"><span class="nav-number">3.4.</span> <span class="nav-text">3.4: 创建源文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-创建索引文件"><span class="nav-number">3.5.</span> <span class="nav-text">3.5: 创建索引文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-设置构建脚本"><span class="nav-number">3.6.</span> <span class="nav-text">3.6: 设置构建脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-运行构建"><span class="nav-number">3.7.</span> <span class="nav-text">3.7: 运行构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-8-将-dist-添加到-gitignore"><span class="nav-number">3.8.</span> <span class="nav-text">3.8: 将 dist 添加到 .gitignore</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-9-设置-CI-脚本"><span class="nav-number">3.9.</span> <span class="nav-text">3.9: 设置 CI 脚本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Prettier"><span class="nav-number">4.</span> <span class="nav-text">4: Prettier</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-安装-Prettier"><span class="nav-number">4.1.</span> <span class="nav-text">4.1: 安装 Prettier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-设置-prettierrc"><span class="nav-number">4.2.</span> <span class="nav-text">4.2: 设置 .prettierrc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-设置格式化脚本"><span class="nav-number">4.3.</span> <span class="nav-text">4.3: 设置格式化脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-运行格式化脚本"><span class="nav-number">4.4.</span> <span class="nav-text">4.4: 运行格式化脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-设置检查格式脚本"><span class="nav-number">4.5.</span> <span class="nav-text">4.5: 设置检查格式脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-将其添加到-CI-脚本"><span class="nav-number">4.6.</span> <span class="nav-text">4.6: 将其添加到 CI 脚本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-exports、main-和-arethetypeswrong-cli"><span class="nav-number">5.</span> <span class="nav-text">5: exports、main 和 @arethetypeswrong/cli</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-安装-arethetypeswrong-cli"><span class="nav-number">5.1.</span> <span class="nav-text">5.1: 安装 @arethetypeswrong/cli</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-设置-check-exports-脚本"><span class="nav-number">5.2.</span> <span class="nav-text">5.2: 设置 check-exports 脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-运行-check-exports-脚本"><span class="nav-number">5.3.</span> <span class="nav-text">5.3: 运行 check-exports 脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-设置-main-字段"><span class="nav-number">5.4.</span> <span class="nav-text">5.4: 设置 main 字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-再次运行-check-exports-脚本"><span class="nav-number">5.5.</span> <span class="nav-text">5.5: 再次运行 check-exports 脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-修复-CJS-警告"><span class="nav-number">5.6.</span> <span class="nav-text">5.6: 修复 CJS 警告</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-将-check-exports-脚本添加到-CI-脚本中"><span class="nav-number">5.7.</span> <span class="nav-text">5.7: 将 check-exports 脚本添加到 CI 脚本中</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-使用-tsup-实现双重发布"><span class="nav-number">6.</span> <span class="nav-text">6: 使用 tsup 实现双重发布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-安装-tsup"><span class="nav-number">6.1.</span> <span class="nav-text">6.1: 安装 tsup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-创建-tsup-config-ts-文件"><span class="nav-number">6.2.</span> <span class="nav-text">6.2: 创建 tsup.config.ts 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-修改-build-脚本"><span class="nav-number">6.3.</span> <span class="nav-text">6.3: 修改 build 脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-添加-exports-字段"><span class="nav-number">6.4.</span> <span class="nav-text">6.4: 添加 exports 字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-再次运行-check-exports-脚本"><span class="nav-number">6.5.</span> <span class="nav-text">6.5: 再次运行 check-exports 脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-将-TypeScript-用作-Linter"><span class="nav-number">6.6.</span> <span class="nav-text">6.6: 将 TypeScript 用作 Linter</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-6-1-在-tsconfig-json-中添加-noEmit"><span class="nav-number">6.6.1.</span> <span class="nav-text">6.6.1: 在 tsconfig.json 中添加 noEmit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-6-2-删除-tsconfig-json-中未使用的字段"><span class="nav-number">6.6.2.</span> <span class="nav-text">6.6.2: 删除 tsconfig.json 中未使用的字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-6-3-可选：将-module-改为-Preserve"><span class="nav-number">6.6.3.</span> <span class="nav-text">6.6.3: 可选：将 module 改为 Preserve</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-6-4-添加-lint-脚本"><span class="nav-number">6.6.4.</span> <span class="nav-text">6.6.4: 添加 lint 脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-6-5-将-lint-添加到-CI-脚本中"><span class="nav-number">6.6.5.</span> <span class="nav-text">6.6.5: 将 lint 添加到 CI 脚本中</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-使用-Vitest-进行测试"><span class="nav-number">7.</span> <span class="nav-text">7: 使用 Vitest 进行测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-安装-Vitest"><span class="nav-number">7.1.</span> <span class="nav-text">7.1: 安装 Vitest</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-创建一个测试文件"><span class="nav-number">7.2.</span> <span class="nav-text">7.2: 创建一个测试文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-设置测试脚本"><span class="nav-number">7.3.</span> <span class="nav-text">7.3: 设置测试脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-运行测试脚本"><span class="nav-number">7.4.</span> <span class="nav-text">7.4: 运行测试脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-设置开发脚本"><span class="nav-number">7.5.</span> <span class="nav-text">7.5: 设置开发脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6-将测试脚本添加到-CI-脚本"><span class="nav-number">7.6.</span> <span class="nav-text">7.6: 将测试脚本添加到 CI 脚本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-Set-up-CI-with-GitHub-Actions"><span class="nav-number">8.</span> <span class="nav-text">8: Set up CI with GitHub Actions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-创建工作流"><span class="nav-number">8.1.</span> <span class="nav-text">8.1: 创建工作流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-测试工作流"><span class="nav-number">8.2.</span> <span class="nav-text">8.2: 测试工作流</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-Publishing-with-Changesets"><span class="nav-number">9.</span> <span class="nav-text">9: Publishing with Changesets</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-安装-changesets-cli"><span class="nav-number">9.1.</span> <span class="nav-text">9.1: 安装 @changesets/cli</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-初始化-Changesets"><span class="nav-number">9.2.</span> <span class="nav-text">9.2: 初始化 Changesets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-设置-Changeset-发布为公开"><span class="nav-number">9.3.</span> <span class="nav-text">9.3: 设置 Changeset 发布为公开</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-4-将-commit-设置为-true"><span class="nav-number">9.4.</span> <span class="nav-text">9.4: 将 commit 设置为 true</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-5-设置-local-release-脚本"><span class="nav-number">9.5.</span> <span class="nav-text">9.5: 设置 local-release 脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-6-在-prepublishOnly-中运行-CI"><span class="nav-number">9.6.</span> <span class="nav-text">9.6: 在 prepublishOnly 中运行 CI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-7-添加-changeset"><span class="nav-number">9.7.</span> <span class="nav-text">9.7: 添加 changeset</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-8-提交你的更改"><span class="nav-number">9.8.</span> <span class="nav-text">9.8: 提交你的更改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-9-运行-local-release-脚本"><span class="nav-number">9.9.</span> <span class="nav-text">9.9: 运行 local-release 脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-10-查看你的包"><span class="nav-number">9.10.</span> <span class="nav-text">9.10: 查看你的包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">DrLouie</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/dusuwen/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/dusuwen/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DusuWen" title="GitHub → https://github.com/DusuWen" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DrLouie</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/dusuwen/lib/anime.min.js"></script>
+  <script src="/dusuwen/lib/velocity/velocity.min.js"></script>
+  <script src="/dusuwen/lib/velocity/velocity.ui.min.js"></script>
+<script src="/dusuwen/js/utils.js"></script><script src="/dusuwen/js/motion.js"></script>
+<script src="/dusuwen/js/schemes/muse.js"></script>
+<script src="/dusuwen/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

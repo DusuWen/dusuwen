@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/dusuwen/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/dusuwen/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/dusuwen/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/dusuwen/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/dusuwen/css/main.css">
+
+
+<link rel="stylesheet" href="/dusuwen/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"dusuwen.github.io","root":"/dusuwen/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="在 Javascript 的发展过程中，应对工程化的不断深入，逐渐发展出了多种模块化方案，在 Node.js 和浏览器环境中，出现了 CommonJS、AMD、UMD、CMD、ESM 等多种模块化规范。">
+<meta name="keywords" content="记录">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript模块化">
+<meta property="og:url" content="https://dusuwen.github.io/dusuwen/2024/04/23/Javascript模块化/index.html">
+<meta property="og:site_name" content="博客">
+<meta property="og:description" content="在 Javascript 的发展过程中，应对工程化的不断深入，逐渐发展出了多种模块化方案，在 Node.js 和浏览器环境中，出现了 CommonJS、AMD、UMD、CMD、ESM 等多种模块化规范。">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2024-12-20T06:42:40.468Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Javascript模块化">
+<meta name="twitter:description" content="在 Javascript 的发展过程中，应对工程化的不断深入，逐渐发展出了多种模块化方案，在 Node.js 和浏览器环境中，出现了 CommonJS、AMD、UMD、CMD、ESM 等多种模块化规范。">
+
+<link rel="canonical" href="https://dusuwen.github.io/dusuwen/2024/04/23/Javascript模块化/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>Javascript模块化 | 博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/dusuwen/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/dusuwen/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/dusuwen/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/dusuwen/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/dusuwen/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2024/04/23/Javascript模块化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/dusuwen/images/avatar.gif">
+      <meta itemprop="name" content="DrLouie">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Javascript模块化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-04-23 13:49:48" itemprop="dateCreated datePublished" datetime="2024-04-23T13:49:48+08:00">2024-04-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-12-20 14:42:40" itemprop="dateModified" datetime="2024-12-20T14:42:40+08:00">2024-12-20</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在 Javascript 的发展过程中，应对工程化的不断深入，逐渐发展出了多种模块化方案，在 Node.js 和浏览器环境中，出现了 CommonJS、AMD、UMD、CMD、ESM 等多种模块化规范。</p>
+<a id="more"></a>
+
+<h3 id="Node环境"><a href="#Node环境" class="headerlink" title="Node环境"></a>Node环境</h3><h4 id="CommonJS"><a href="#CommonJS" class="headerlink" title="CommonJS"></a>CommonJS</h4><ul>
+<li>所有代码都运行在模块作用域，不会污染全局作用域</li>
+<li>通过 module.exports 暴露，通过 require 导入</li>
+<li>提供动态导入</li>
+<li>同步导入</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 CommonJS 导入</span></span><br><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 CommonJS 导出</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// Some functionality</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="浏览器环境"><a href="#浏览器环境" class="headerlink" title="浏览器环境"></a>浏览器环境</h3><p>随着前端开发越来越复杂，在 script 中多个文件互相引用方法变量变得越来越难以组织，AMD、CMD这样的规范便应运而生。</p>
+<h4 id="AMD"><a href="#AMD" class="headerlink" title="AMD"></a>AMD</h4><ul>
+<li>全称 Asynchronous Module Definition，意为异步模块定义</li>
+<li>采用异步方式加载模块</li>
+<li>使用 require() 语句，需要回调函数</li>
+<li>通过 RequireJS 和 curl.js 来实现 AMD 方案</li>
+<li>浏览器不需要使用构建工具</li>
+</ul>
+<h4 id="CMD"><a href="#CMD" class="headerlink" title="CMD"></a>CMD</h4><ul>
+<li>专门用于浏览器端，模块的加载是异步的</li>
+<li>整合了 CommonJS 和 AMD 规范的特点</li>
+<li>在浏览器环境中使用 Sea.js 使用 CMD 规范模块</li>
+<li>浏览器不需要使用构建工具</li>
+</ul>
+<h3 id="UMD"><a href="#UMD" class="headerlink" title="UMD"></a>UMD</h3><p>一个模块/库的作者如果希望自己的代码同时支持 Node 端和浏览器端，而不需要提供两种规范的 js 文件的话，可以使用 UMD。<br>UMD 是 CommonJS 和 AMD 的糅合，会先判断是否 node 环境，再判断是否支持 AMD，如果都不是最后注册到 window 上。</p>
+<h3 id="ESM"><a href="#ESM" class="headerlink" title="ESM"></a>ESM</h3><p>随着前端技术的发展，js 应用已经复杂到需要构建工具来组织代码，此时，ESM 成为了最方便的前端模块化方案选择。<br>ESM 是现代 JavaScript 的官方标准模块系统，也被最新版本的浏览器原生支持。<br>通过 export 导出，import 引入，node 新版本中得到支持，是静态的</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用ES Modules 导入</span></span><br><span class="line"><span class="keyword">import</span> express <span class="keyword">from</span> <span class="string">'express'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 ES Modules 导出</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">myFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// Some functionality</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>ES6 在语言标准的层面上，实现了模块功能，而且实现得相当简单，完全可以取代 CommonJS 和 AMD 规范，成为浏览器和服务器通用的模块解决方案。将来服务器和浏览器都会支持 ES6 模块格式。</p>
+<h3 id="现状"><a href="#现状" class="headerlink" title="现状"></a>现状</h3><p>在一个纯前端应用中，使用构建工具例如 webpack 可以直接在 js 文件中使用 CommonJS 和 ESM 方案的模块引用。<br>而在一个纯 Node.js 项目中，虽然最新版的 Node 已经原生支持 ESM,但是 Node 端众多的库仅提供了 CommonJS 方案，而 CommonJS 与 ESM 不能兼容，所以 Node.jS 项目中默认把 .js 文件拓展名与 CommonJS 模块关联，不可以在一个文件中同时使用 require 和 import 语法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = <span class="built_in">require</span>(<span class="string">"./a.js"</span>)</span><br><span class="line"><span class="keyword">import</span> &#123; b &#125; <span class="keyword">from</span> <span class="string">"./b.js"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>为了解决在现阶段 Node.js 中使用 ESM 的问题，Node.js 允许使用 .mjs 文件拓展名或者在 package.json 中明确指定 “type”: “module” 属性来表示 ESM 模块。<br>或者当你的项目指定 “type”: “module” 后有某个文件需要引用 CommonJS 模块，可以使用 .cjs 文件拓展名。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/dusuwen/tags/记录/" rel="tag"># 记录</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/dusuwen/2024/03/14/译-socketio初体验/" rel="prev" title="译-Socket.io初体验">
+      <i class="fa fa-chevron-left"></i> 译-Socket.io初体验
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/dusuwen/2024/08/12/简单了解docker/" rel="next" title="简单了解docker">
+      简单了解docker <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Node环境"><span class="nav-number">1.</span> <span class="nav-text">Node环境</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CommonJS"><span class="nav-number">1.1.</span> <span class="nav-text">CommonJS</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览器环境"><span class="nav-number">2.</span> <span class="nav-text">浏览器环境</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AMD"><span class="nav-number">2.1.</span> <span class="nav-text">AMD</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CMD"><span class="nav-number">2.2.</span> <span class="nav-text">CMD</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UMD"><span class="nav-number">3.</span> <span class="nav-text">UMD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ESM"><span class="nav-number">4.</span> <span class="nav-text">ESM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#现状"><span class="nav-number">5.</span> <span class="nav-text">现状</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">DrLouie</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/dusuwen/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/dusuwen/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DusuWen" title="GitHub → https://github.com/DusuWen" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DrLouie</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/dusuwen/lib/anime.min.js"></script>
+  <script src="/dusuwen/lib/velocity/velocity.min.js"></script>
+  <script src="/dusuwen/lib/velocity/velocity.ui.min.js"></script>
+<script src="/dusuwen/js/utils.js"></script><script src="/dusuwen/js/motion.js"></script>
+<script src="/dusuwen/js/schemes/muse.js"></script>
+<script src="/dusuwen/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/dusuwen/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/dusuwen/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/dusuwen/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/dusuwen/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/dusuwen/css/main.css">
+
+
+<link rel="stylesheet" href="/dusuwen/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"dusuwen.github.io","root":"/dusuwen/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="什么是声明文件声明文件用以描述JavaScript模块或库的类型信息，可以让TypeScript在使用这个库时进行类型检查和智能提示。声明文件通常使用.d.ts拓展名。">
+<meta name="keywords" content="TypeScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="声明文件与JSDoc">
+<meta property="og:url" content="https://dusuwen.github.io/dusuwen/2023/08/01/声明文件与JSDoc/index.html">
+<meta property="og:site_name" content="博客">
+<meta property="og:description" content="什么是声明文件声明文件用以描述JavaScript模块或库的类型信息，可以让TypeScript在使用这个库时进行类型检查和智能提示。声明文件通常使用.d.ts拓展名。">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2024-12-20T06:42:40.470Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="声明文件与JSDoc">
+<meta name="twitter:description" content="什么是声明文件声明文件用以描述JavaScript模块或库的类型信息，可以让TypeScript在使用这个库时进行类型检查和智能提示。声明文件通常使用.d.ts拓展名。">
+
+<link rel="canonical" href="https://dusuwen.github.io/dusuwen/2023/08/01/声明文件与JSDoc/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>声明文件与JSDoc | 博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/dusuwen/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/dusuwen/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/dusuwen/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/dusuwen/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/dusuwen/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2023/08/01/声明文件与JSDoc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/dusuwen/images/avatar.gif">
+      <meta itemprop="name" content="DrLouie">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          声明文件与JSDoc
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-01 16:39:00" itemprop="dateCreated datePublished" datetime="2023-08-01T16:39:00+08:00">2023-08-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-12-20 14:42:40" itemprop="dateModified" datetime="2024-12-20T14:42:40+08:00">2024-12-20</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="什么是声明文件"><a href="#什么是声明文件" class="headerlink" title="什么是声明文件"></a>什么是声明文件</h3><p>声明文件用以描述JavaScript模块或库的类型信息，可以让TypeScript在使用这个库时进行类型检查和智能提示。声明文件通常使用.d.ts拓展名。</p>
+<a id="more"></a>
+
+<h3 id="什么时候使用声明文件"><a href="#什么时候使用声明文件" class="headerlink" title="什么时候使用声明文件"></a>什么时候使用声明文件</h3><p>如果需要设计一个库需要同时支持js和ts，可以将.d.ts文件随着js文件一起发布，在ts项目中可以取得这个库的类型信息。或者在一个传统js项目中为一个js文件中的某些方法添加更加详细的类型标注，以便编辑器可以进行更智能的类型提示和代码补全，例如webstorm可以对一个js方法的入参返回值进行类型推断然后智能提示，但是如果人为手动添加.d.ts文件进行类型描述可以得到比webstorm自动进行的类型推断更加准确的类型标注，从而减少调用方法时因为入参或返回值的类型信息错误而引起的不必要的bug。</p>
+<h3 id="如何编写声明文件"><a href="#如何编写声明文件" class="headerlink" title="如何编写声明文件"></a>如何编写声明文件</h3><p>声明文件必需以 .d.ts 为后缀，并且放在一个单独的文件内，在需要添加类型标注的js文件统计目录下添加同名的以.d.ts结尾的文件，如在index.js旁可以添加index.d.ts。在index.js中定义了一个方法，并导出给全局使用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> formatTime = <span class="function">(<span class="params">time, format = <span class="string">"YYYY-MM-DD HH:mm:ss"</span></span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> formattedTime = moment(time);</span><br><span class="line">    <span class="keyword">if</span> (formattedTime.isValid()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (formattedTime.parseZone().utcOffset() === <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> formattedTime.local().format(format)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> formattedTime.format(format)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"-"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>示例中formatTime接受2个参数，第一个参数可为string或number，第二个参数可不传入，如不传入默认为“YYYY-MM-DD HH:mm:ss”，如果传入需要为string，同时返回一个string的返回值，如果需要添加类型说明，那么index.d.ts文件如下</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">formatTime</span>(<span class="params">time:<span class="built_in">string</span> | <span class="built_in">number</span>, format?:<span class="built_in">string</span>="YYYY-MM-DD HH:mm:ss"</span>): <span class="title">string</span></span></span><br><span class="line"><span class="function"><span class="title">export</span> </span>&#123; formatTime &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在一个ts或者js项目中引入index.js和index.d.ts后都可以正常使用index.js并且编辑器会自动家在.d.ts文件来为开发者在使用formatTime方法时提供智能提示和代码补全</p>
+<h3 id="有没有必要编写声明文件"><a href="#有没有必要编写声明文件" class="headerlink" title="有没有必要编写声明文件"></a>有没有必要编写声明文件</h3><p>在我们的项目开发过程中，不管是使用react还是vue体系，都会沉淀大量非业务代码的基建代码，属于我们的重要资产，而一个方法类在多处业务页面调用时应该有着完善的文档来提供支持，而且随着vue3和ts的到来，众多在vue2时代积累的方法类、js纯函数将无法直接导入至ts项目中，此时通过编写声明文件提供类型推断的支持从而避免ts重构，尤其面对重要或者及其复杂的方法时，ts重构是很有风险并且耗时的事情，所以为js方法类添加声明文件可以为以后升级迁移至ts项目做前置准备。</p>
+<h3 id="另一种选择JSDoc"><a href="#另一种选择JSDoc" class="headerlink" title="另一种选择JSDoc"></a>另一种选择JSDoc</h3><p>如果只是为了给公共基建方法添加注释以便得到完整的代码提示、类型声明还可以使用JSDoc。JSDoc是一种用于JavaScript代码文档化的标准注释格式。它允许开发人员在代码中使用特定的注释标签来描述函数、方法、变量等的用途、参数、返回值等信息，从而生成清晰、易读的代码文档。</p>
+<p>上面的index.js就可以写成以下形式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * format time</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;string|number&#125;</span> </span>time need format</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;string&#125;</span> </span>[format] default use YYYY-MM-DD HH:mm:ss</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns <span class="type">&#123;string&#125;</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> formatTime = <span class="function">(<span class="params">time, format = <span class="string">"YYYY-MM-DD HH:mm:ss"</span></span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> formattedTime = moment(time);</span><br><span class="line">    <span class="keyword">if</span> (formattedTime.isValid()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (formattedTime.parseZone().utcOffset() === <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> formattedTime.local().format(format)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> formattedTime.format(format)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"-"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>以上jsdoc的示例可以得到和.d.ts一样的类型推断提示以及代码补全，还有对方法和参数的注释</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/dusuwen/tags/TypeScript/" rel="tag"># TypeScript</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/dusuwen/2023/06/30/关于browserslist的一点学习/" rel="prev" title="关于browserslist的一点学习">
+      <i class="fa fa-chevron-left"></i> 关于browserslist的一点学习
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/dusuwen/2024/03/14/译-socketio初体验/" rel="next" title="译-Socket.io初体验">
+      译-Socket.io初体验 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是声明文件"><span class="nav-number">1.</span> <span class="nav-text">什么是声明文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么时候使用声明文件"><span class="nav-number">2.</span> <span class="nav-text">什么时候使用声明文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何编写声明文件"><span class="nav-number">3.</span> <span class="nav-text">如何编写声明文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有没有必要编写声明文件"><span class="nav-number">4.</span> <span class="nav-text">有没有必要编写声明文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#另一种选择JSDoc"><span class="nav-number">5.</span> <span class="nav-text">另一种选择JSDoc</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">DrLouie</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/dusuwen/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/dusuwen/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DusuWen" title="GitHub → https://github.com/DusuWen" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DrLouie</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/dusuwen/lib/anime.min.js"></script>
+  <script src="/dusuwen/lib/velocity/velocity.min.js"></script>
+  <script src="/dusuwen/lib/velocity/velocity.ui.min.js"></script>
+<script src="/dusuwen/js/utils.js"></script><script src="/dusuwen/js/motion.js"></script>
+<script src="/dusuwen/js/schemes/muse.js"></script>
+<script src="/dusuwen/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
