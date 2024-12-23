@@ -27,17 +27,17 @@
 <meta property="og:site_name" content="博客">
 <meta property="og:description" content="Javascript的几种数据类型最新的ECMAScript标准定义了7中数据类型：  6种原始类型 Boolean Null Undefined Number String Symbol(ECMAScript6 新定义)   和Object">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:image" content="https://cn.vuejs.org/images/data.png">
-<meta property="og:image" content="https://res.cloudinary.com/drlouie/image/upload/v1563519906/16ba7a26808f090d_rtkquj.png">
-<meta property="og:image" content="https://res.cloudinary.com/drlouie/image/upload/v1563519997/16bb1950c798616d_gso2rl.png">
-<meta property="og:image" content="https://res.cloudinary.com/drlouie/image/upload/v1563520006/16bb1950c8a01f36_hw4vc7.webp">
-<meta property="og:image" content="https://res.cloudinary.com/drlouie/image/upload/v1563520115/16bb1950c88d95c2_pkyzf0.webp">
-<meta property="og:image" content="https://res.cloudinary.com/drlouie/image/upload/v1563520358/hexo/16bb1950c95c6bd7_d9lvpu.webp">
-<meta property="og:updated_time" content="2024-12-23T05:41:50.659Z">
+<meta property="og:image" content="https://dusuwen.github.io/dusuwen/images/vue-data.png">
+<meta property="og:image" content="https://dusuwen.github.io/dusuwen/images/16ba7a26808f090d_rtkquj.png">
+<meta property="og:image" content="https://dusuwen.github.io/dusuwen/images/v1563519997/16bb1950c798616d_gso2rl.png">
+<meta property="og:image" content="https://dusuwen.github.io/dusuwen/images/16bb1950c8a01f36_hw4vc7.webp">
+<meta property="og:image" content="https://dusuwen.github.io/dusuwen/images/16bb1950c88d95c2_pkyzf0.webp">
+<meta property="og:image" content="https://dusuwen.github.io/dusuwen/images/16bb1950c95c6bd7_d9lvpu.webp">
+<meta property="og:updated_time" content="2024-12-23T06:29:02.276Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题合集（持续更新）">
 <meta name="twitter:description" content="Javascript的几种数据类型最新的ECMAScript标准定义了7中数据类型：  6种原始类型 Boolean Null Undefined Number String Symbol(ECMAScript6 新定义)   和Object">
-<meta name="twitter:image" content="https://cn.vuejs.org/images/data.png">
+<meta name="twitter:image" content="https://dusuwen.github.io/dusuwen/images/vue-data.png">
 
 <link rel="canonical" href="https://dusuwen.github.io/dusuwen/2019/05/30/记一次面试/">
 
@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-12-23 13:41:50" itemprop="dateModified" datetime="2024-12-23T13:41:50+08:00">2024-12-23</time>
+                <time title="Modified: 2024-12-23 14:29:02" itemprop="dateModified" datetime="2024-12-23T14:29:02+08:00">2024-12-23</time>
               </span>
 
           
@@ -223,9 +223,10 @@
 </ul>
 </li>
 <li>和Object<a id="more"></a>
-<h3 id="如何判断一个Javascript数据类型"><a href="#如何判断一个Javascript数据类型" class="headerlink" title="如何判断一个Javascript数据类型"></a>如何判断一个Javascript数据类型</h3></li>
+
+</li>
 </ul>
-<h4 id="typeof-操作符"><a href="#typeof-操作符" class="headerlink" title="typeof 操作符"></a>typeof 操作符</h4><p><code>typeof</code>是<code>javascript</code>原生提供的判断数据类型的运算符，它会返回一个表示参数的数据类型的字符串，但是需要注意的是，<code>Null</code>会返回object，数组属于Any other object也会返回object。</p>
+<h3 id="如何判断一个Javascript数据类型"><a href="#如何判断一个Javascript数据类型" class="headerlink" title="如何判断一个Javascript数据类型"></a>如何判断一个Javascript数据类型</h3><h4 id="typeof-操作符"><a href="#typeof-操作符" class="headerlink" title="typeof 操作符"></a>typeof 操作符</h4><p><code>typeof</code>是<code>javascript</code>原生提供的判断数据类型的运算符，它会返回一个表示参数的数据类型的字符串，但是需要注意的是，<code>Null</code>会返回object，数组属于Any other object也会返回object。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">const</span> b = &#123;&#125;;</span><br><span class="line"><span class="keyword">const</span> c= [];</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(a)); <span class="comment">//Object</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(b)); <span class="comment">//Object</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(c)); <span class="comment">//Object</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="instanceof运算符"><a href="#instanceof运算符" class="headerlink" title="instanceof运算符"></a>instanceof运算符</h4><p><code>instanceof</code>运算符可以用来判断某个构造函数的<code>prototype</code>属性所指向的对象是否存在于另外一个要检测对象的原型链上。</p>
@@ -244,7 +245,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = [];</span><br><span class="line"><span class="keyword">const</span> b = &#123;&#125;;</span><br><span class="line"><span class="built_in">Array</span>.isArray(a);<span class="comment">//true</span></span><br><span class="line"><span class="built_in">Array</span>.isArray(b);<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="Vue实现数据绑定的原理"><a href="#Vue实现数据绑定的原理" class="headerlink" title="Vue实现数据绑定的原理"></a>Vue实现数据绑定的原理</h3><p>当把一个<code>javascript</code>对象传递给<code>vue</code>实例的<code>data</code>选项时，<code>vue</code>将遍历这个对象的所有属性，并使用<code>object.defineProperty</code>把这些属性转变为<code>getter</code>和<code>settter</code>。每个组件实例都有相应的<code>watcher</code>实例对象，它会在组件渲染过程中把属性记录为依赖，当依赖的<code>setter</code>被调用时，会通知<code>watcher</code>重新计算，<code>watcher</code>通过依赖找到使用<code>getter</code>获取该属性值的组件，并通知该组件重新渲染，渲染完成后再次把属性记录为依赖存入<code>watcher</code>实例。</p>
-<p><img src="https://cn.vuejs.org/images/data.png" alt="如何追踪变化"></p>
+<p><img src="/dusuwen/images/vue-data.png" alt="如何追踪变化"></p>
 <p>注意事项</p>
 <ul>
 <li>Vue不能检测到对象属性的添加或删除</li>
@@ -322,12 +323,12 @@
 <h5 id="F5-在firefox中"><a href="#F5-在firefox中" class="headerlink" title="F5 在firefox中"></a>F5 在firefox中</h5><p>按<code>F5</code>后，请求的状态码是304 Not Modified，这是因为firefox在<code>F5</code>发送请求时会在请求头添加<code>If-Modified-Since</code>字段，如果资源未过期，命中缓存，服务器会直接返回304状态码，浏览器会直接使用本地资源，这就是协商缓存</p>
 <h5 id="Ctrl-F5-在chrome和firefox中"><a href="#Ctrl-F5-在chrome和firefox中" class="headerlink" title="Ctrl+F5 在chrome和firefox中"></a>Ctrl+F5 在chrome和firefox中</h5><p>请求头中多了<code>Cache-Control:no-cache</code>和<code>Prafma:no-cache</code>表示浏览器不接受本地缓存的资源，需要到源服务器进行资源请求，但是这个过程中其实可以使用缓存服务器中资源，不过需要到源服务器进行验证，验证通过才可以将缓存服务器的资源返回给浏览器</p>
 <h3 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h3><h4 id="基础数据类型与栈内存"><a href="#基础数据类型与栈内存" class="headerlink" title="基础数据类型与栈内存"></a>基础数据类型与栈内存</h4><p>基本类型是保存在栈内存中的简单数据段，它们的值都有固定的大小，保存在栈空间，通过按值访问，并由系统自动分配和自动释放。 这样带来的好处就是，内存可以及时得到回收，相对于堆来说，更加容易管理内存空间。 JavaScript 中的 <code>Boolean、Null、Undefined、Number、String、Symbol</code> 都是基本类型。</p>
-<p><img src="https://res.cloudinary.com/drlouie/image/upload/v1563519906/16ba7a26808f090d_rtkquj.png" alt="栈"></p>
+<p><img src="/dusuwen/images/16ba7a26808f090d_rtkquj.png" alt="栈"></p>
 <h4 id="引用数据类型与堆内存"><a href="#引用数据类型与堆内存" class="headerlink" title="引用数据类型与堆内存"></a>引用数据类型与堆内存</h4><p>引用类型（如对象、数组、函数等）是保存在堆内存中的对象，值大小不固定，栈内存中存放的该对象的访问地址指向堆内存中的对象，JavaScript 不允许直接访问堆内存中的位置，因此操作对象时，实际操作对象的引用。 JavaScript 中的 <code>Object、Array、Function、RegExp、Date</code> 是引用类型。</p>
-<p><img src="https://res.cloudinary.com/drlouie/image/upload/v1563519997/16bb1950c798616d_gso2rl.png" alt="堆"></p>
-<h3 id="浅拷贝和深拷贝"><a href="#浅拷贝和深拷贝" class="headerlink" title="浅拷贝和深拷贝"></a>浅拷贝和深拷贝</h3><h4 id="基本类型发生复制"><a href="#基本类型发生复制" class="headerlink" title="基本类型发生复制"></a>基本类型发生复制</h4><p><img src="https://res.cloudinary.com/drlouie/image/upload/v1563520006/16bb1950c8a01f36_hw4vc7.webp" alt="基本类型复制"></p>
+<p><img src="/dusuwen/images/v1563519997/16bb1950c798616d_gso2rl.png" alt="堆"></p>
+<h3 id="浅拷贝和深拷贝"><a href="#浅拷贝和深拷贝" class="headerlink" title="浅拷贝和深拷贝"></a>浅拷贝和深拷贝</h3><h4 id="基本类型发生复制"><a href="#基本类型发生复制" class="headerlink" title="基本类型发生复制"></a>基本类型发生复制</h4><p><img src="/dusuwen/images/16bb1950c8a01f36_hw4vc7.webp" alt="基本类型复制"></p>
 <p>在栈内存中的数据发生复制行为时，系统会自动为新的变量分配一个新值，最后这些变量都是 <strong>相互独立，互不影响的</strong>。</p>
-<h4 id="引用类型发生复制"><a href="#引用类型发生复制" class="headerlink" title="引用类型发生复制"></a>引用类型发生复制</h4><p><img src="https://res.cloudinary.com/drlouie/image/upload/v1563520115/16bb1950c88d95c2_pkyzf0.webp" alt="引用类型发生复制"></p>
+<h4 id="引用类型发生复制"><a href="#引用类型发生复制" class="headerlink" title="引用类型发生复制"></a>引用类型发生复制</h4><p><img src="/dusuwen/images/16bb1950c88d95c2_pkyzf0.webp" alt="引用类型发生复制"></p>
 <ul>
 <li><p>引用类型的复制，同样为新的变量 b 分配一个新的值，保存在栈内存中，不同的是，这个值仅仅是引用类型的一个地址指针。</p>
 </li>
@@ -338,7 +339,7 @@
 </ul>
 <h4 id="浅拷贝"><a href="#浅拷贝" class="headerlink" title="浅拷贝"></a>浅拷贝</h4><p><code>引用类型的复制</code>就是浅拷贝，复制得到的访问地址都指向<code>同一个内存空间</code>，所以修改其中一个的值，另外一个也跟着改变。</p>
 <h4 id="深拷贝"><a href="#深拷贝" class="headerlink" title="深拷贝"></a>深拷贝</h4><p>复制得到的访问地址指向<code>不同的内存空间，互不干扰</code>，所以修改其中一个值，另外一个不会改变。</p>
-<p><img src="https://res.cloudinary.com/drlouie/image/upload/v1563520358/hexo/16bb1950c95c6bd7_d9lvpu.webp" alt="复制后"></p>
+<p><img src="/dusuwen/images/16bb1950c95c6bd7_d9lvpu.webp" alt="复制后"></p>
 <h4 id="如何实现深拷贝"><a href="#如何实现深拷贝" class="headerlink" title="如何实现深拷贝"></a>如何实现深拷贝</h4><p>知晓引用类型的原理后实现深拷贝的方法就是创建一个新的堆内存控件，使复制出的栈内存空间指向新的堆内存引用。</p>
 <h5 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h5><ul>
 <li>for循环</li>

@@ -28,12 +28,12 @@
 <meta property="og:site_name" content="博客">
 <meta property="og:description" content="什么是 NightwatchNightwatch 是一个可以为 Web 应用和网站提供自动端对端测试的框架。它由 Node.js 编写而成并且使用 W3C WebDriver API （以前是Selenium WebDriver）与不同的浏览器互动。 Nightwatch 是一个完整的测试解决方案旨在简化编写测试的过程以及设置持续集成和持续部署。Nightwatch 还可以用作为 Node.js">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:image" content="https://res.cloudinary.com/drlouie/image/upload/v1723442196/hexo/operation_lvaakx.png">
-<meta property="og:updated_time" content="2024-12-20T06:42:40.470Z">
+<meta property="og:image" content="https://dusuwen.github.io/dusuwen/images/operation_lvaakx.png">
+<meta property="og:updated_time" content="2024-12-23T06:29:02.266Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="端对端测试框架选择及其简单用法">
 <meta name="twitter:description" content="什么是 NightwatchNightwatch 是一个可以为 Web 应用和网站提供自动端对端测试的框架。它由 Node.js 编写而成并且使用 W3C WebDriver API （以前是Selenium WebDriver）与不同的浏览器互动。 Nightwatch 是一个完整的测试解决方案旨在简化编写测试的过程以及设置持续集成和持续部署。Nightwatch 还可以用作为 Node.js">
-<meta name="twitter:image" content="https://res.cloudinary.com/drlouie/image/upload/v1723442196/hexo/operation_lvaakx.png">
+<meta name="twitter:image" content="https://dusuwen.github.io/dusuwen/images/operation_lvaakx.png">
 
 <link rel="canonical" href="https://dusuwen.github.io/dusuwen/2020/07/28/端对端测试框架选择及其简单用法/">
 
@@ -193,7 +193,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-12-20 14:42:40" itemprop="dateModified" datetime="2024-12-20T14:42:40+08:00">2024-12-20</time>
+                <time title="Modified: 2024-12-23 14:29:02" itemprop="dateModified" datetime="2024-12-23T14:29:02+08:00">2024-12-23</time>
               </span>
 
           
@@ -213,7 +213,7 @@
 <h3 id="什么是-WebDriver"><a href="#什么是-WebDriver" class="headerlink" title="什么是 WebDriver"></a>什么是 WebDriver</h3><p>WebDriver 是用于自动化Web浏览器的通用库。它开始与 Selenium 项目的一部分，Selenium 是一个最全面、最流行的浏览器自动化工具，最初是为了 Java 编写，现在是为了大多数编程语言。</p>
 <p>WebDriver 现在是一个 W3C 标准，旨在使浏览器自动化标准化，它提供一个平台并且采用 restful HTTP api 的方式在远程控制浏览器。 </p>
 <h3 id="Nightwatch-原理"><a href="#Nightwatch-原理" class="headerlink" title="Nightwatch 原理"></a>Nightwatch 原理</h3><p>Nightwatch 通过标准化的restful HTTP api 与 WebDriver 沟通，而 WebDriver 通过特定的浏览器驱动例如 ChromeDriver 来与浏览器沟通，WebDriver 扮演一个桥梁的角色。因此，在 Nightwatch 中的测试语句比如css 选择器或者dom 断言才可以在浏览器中执行。</p>
-<p><img src="https://res.cloudinary.com/drlouie/image/upload/v1723442196/hexo/operation_lvaakx.png" alt="theory of operation"></p>
+<p><img src="/dusuwen/images/operation_lvaakx.png" alt="theory of operation"></p>
 <h3 id="Selenium-Server"><a href="#Selenium-Server" class="headerlink" title="Selenium Server"></a>Selenium Server</h3><p>同时，Nightwatch 也可以使用 Selenium Server 做为与浏览器沟通的桥梁。</p>
 <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><h4 id="在项目中使用"><a href="#在项目中使用" class="headerlink" title="在项目中使用"></a>在项目中使用</h4><p>目前我们的项目都是采用 Vue CLI 生成的脚手架工程，可以在脚手架工程生成初期添加插件也可以在工程生成后单独添加。</p>
 <p>参考：</p>
