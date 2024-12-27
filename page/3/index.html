@@ -155,72 +155,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2019/05/31/canvas学习笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/dusuwen/images/avatar.gif">
-      <meta itemprop="name" content="DrLouie">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/dusuwen/2019/05/31/canvas学习笔记/" class="post-title-link" itemprop="url">canvas学习笔记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-05-31 17:46:26" itemprop="dateCreated datePublished" datetime="2019-05-31T17:46:26+08:00">2019-05-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-12-20 14:42:40" itemprop="dateModified" datetime="2024-12-20T14:42:40+08:00">2024-12-20</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近的工作中有一个项目需要使用<code>canvas</code>对图片上的物体进行标注，标注直接使用牛津大学的一个插件，它的基本原理就是根据图片尺寸绘制一个相同大小的<code>canvas</code>图层覆盖在图片上，通过用户使用鼠标点击<code>canvas</code>图层获取坐标位置来调用<code>canvas</code>方法画出图形。插件已经把常见图形的方法封装好了，但是也需要改写一部分。</p>
-<h2 id="什么是canvas"><a href="#什么是canvas" class="headerlink" title="什么是canvas"></a>什么是canvas</h2><p>首先，<code>canvas</code>是一个<code>html</code>标签<code>&lt;canvas&gt;</code>,它和<code>&lt;img&gt;</code>标签很类似，但是不同之处在于，老一些的浏览器不知者这个新标签。<code>canvas</code>只有<code>height</code>和<code>width</code>两个属性，并且不设置的话会被浏览器赋予一个默认值，除此之外还有一个<code>id</code>属性，注意，<code>height</code>和<code>width</code>不可以使用<code>css</code>来设置，会导致图像变形。 </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
     <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2019/05/30/记一次面试/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -907,6 +841,80 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2018/05/07/上传代码至coding-net/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/dusuwen/images/avatar.gif">
+      <meta itemprop="name" content="DrLouie">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/dusuwen/2018/05/07/上传代码至coding-net/" class="post-title-link" itemprop="url">上传代码至coding.net</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-05-07 09:54:15" itemprop="dateCreated datePublished" datetime="2018-05-07T09:54:15+08:00">2018-05-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-12-20 14:42:40" itemprop="dateModified" datetime="2024-12-20T14:42:40+08:00">2024-12-20</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="安装git已经生成key"><a href="#安装git已经生成key" class="headerlink" title="安装git已经生成key"></a>安装git已经生成key</h3><p>需要正确安装git，配置用户名邮箱以及生成key</p>
+<h3 id="创建coding-net项目"><a href="#创建coding-net项目" class="headerlink" title="创建coding.net项目"></a>创建coding.net项目</h3><p>登录coding.net创建私人项目</p>
+<p>并在项目设置-部署公钥 中添加key</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/dusuwen/2018/05/07/上传代码至coding-net/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -976,7 +984,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/dusuwen/archives/">
         
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
