@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/dusuwen/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/dusuwen/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/dusuwen/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/dusuwen/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/dusuwen/css/main.css">
+
+
+<link rel="stylesheet" href="/dusuwen/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"dusuwen.github.io","root":"/dusuwen/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Fetch API 介绍">
+<meta name="keywords" content="API">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fetch API">
+<meta property="og:url" content="https://dusuwen.github.io/dusuwen/2025/02/28/Fetch-API/index.html">
+<meta property="og:site_name" content="博客">
+<meta property="og:description" content="Fetch API 介绍">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2025-02-28T05:52:53.001Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Fetch API">
+<meta name="twitter:description" content="Fetch API 介绍">
+
+<link rel="canonical" href="https://dusuwen.github.io/dusuwen/2025/02/28/Fetch-API/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>Fetch API | 博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/dusuwen/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/dusuwen/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/dusuwen/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/dusuwen/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/dusuwen/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://dusuwen.github.io/dusuwen/2025/02/28/Fetch-API/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/dusuwen/images/avatar.gif">
+      <meta itemprop="name" content="DrLouie">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Fetch API
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-02-28 13:32:12 / Modified: 13:52:53" itemprop="dateCreated datePublished" datetime="2025-02-28T13:32:12+08:00">2025-02-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Fetch API 介绍</p>
+<a id="more"></a>
+
+<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p>fetch() 与 经典的 XMLHttpRequest 基本相同，但有以下三个差异</p>
+<ul>
+<li>fetch 使用 Promise，不使用回调函数，更加符合现代编码式样</li>
+<li>fetch 采用模块化设计，API分散在多个对象上，Response、Request、Headers，相比 XMLHttpRequest 设计更合理</li>
+<li>fetch 通过数据流 Stream 处理数据，可以分块读取，减少内存占用，而 XMLHttpRequest 不支持数据流，所有数据必须放在缓存里，必须要全部获取后再一次读出来</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">'https://api.github.com/users/ruanyf'</span>)</span><br><span class="line">  .then(<span class="function"><span class="params">response</span> =&gt;</span> response.json())</span><br><span class="line">  .then(<span class="function"><span class="params">json</span> =&gt;</span> <span class="built_in">console</span>.log(json))</span><br><span class="line">  .catch(<span class="function"><span class="params">err</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'Request Failed'</span>, err));</span><br></pre></td></tr></table></figure>
+
+<p>上面示例中，fetch 接收到的 response 是一个 Stream 对象，response.json()是一个异步操作，取出所有内容，并将其转为 JSON 对象</p>
+<h2 id="Response-对象"><a href="#Response-对象" class="headerlink" title="Response 对象"></a>Response 对象</h2><p>fetch 请求成功以后，得到的是一个 Response 对象。它对应服务器的 HTTP 回应。<br>前面说过，Response 包含的数据通过 Stream 接口异步读取，但是它还包含一些同步属性，对应 HTTP 回应的标头信息（Headers），可以立即读取。</p>
+<ul>
+<li>Response.ok属性返回一个布尔值，表示请求是否成功，true对应 HTTP 请求的状态码 200 到 299，false对应其他的状态码。</li>
+<li>Response.status属性返回一个数字，表示 HTTP 回应的状态码（例如200，表示成功请求）</li>
+<li>Response.statusText属性返回一个字符串，表示 HTTP 回应的状态信息（例如请求成功以后，服务器返回”OK”）</li>
+</ul>
+<p>fetch()发出请求以后，有一个很重要的注意点：只有网络错误，或者无法连接时，fetch()才会报错，其他情况都不会报错，而是认为请求成功。<br>这就是说，即使服务器返回的状态码是 4xx 或 5xx，fetch()也不会报错（即 Promise 不会变为 rejected状态）。<br>只有通过Response.status属性，得到 HTTP 回应的真实状态码，才能判断请求是否成功。</p>
+<h3 id="读取内容的办法"><a href="#读取内容的办法" class="headerlink" title="读取内容的办法"></a>读取内容的办法</h3><p>Response对象根据服务器返回的不同类型的数据，提供了不同的读取方法</p>
+<ul>
+<li>response.text()：得到文本字符串</li>
+<li>response.json()：得到 JSON 对象</li>
+<li>response.blob()：得到二进制 Blob 对象</li>
+<li>response.formData()：得到 FormData 表单对象</li>
+<li>response.arrayBuffer()：得到二进制 ArrayBuffer 对象<br>上面5个读取方法都是异步的，返回的都是 Promise 对象。必须等到异步操作结束，才能得到服务器返回的完整数据</li>
+</ul>
+<h4 id="response-blob"><a href="#response-blob" class="headerlink" title="response.blob()"></a>response.blob()</h4><p>response.blob()用于获取二进制文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> response = <span class="keyword">await</span> fetch(<span class="string">'flower.jpg'</span>);</span><br><span class="line"><span class="keyword">const</span> myBlob = <span class="keyword">await</span> response.blob();</span><br><span class="line"><span class="keyword">const</span> objectURL = URL.createObjectURL(myBlob);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myImage = <span class="built_in">document</span>.querySelector(<span class="string">'img'</span>);</span><br><span class="line">myImage.src = objectURL;</span><br></pre></td></tr></table></figure>
+
+<h4 id="response-arrayBuffer"><a href="#response-arrayBuffer" class="headerlink" title="response.arrayBuffer()"></a>response.arrayBuffer()</h4><p>response.arrayBuffer()主要用于获取流媒体文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> audioCtx = <span class="keyword">new</span> <span class="built_in">window</span>.AudioContext();</span><br><span class="line"><span class="keyword">const</span> source = audioCtx.createBufferSource();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> response = <span class="keyword">await</span> fetch(<span class="string">'song.ogg'</span>);</span><br><span class="line"><span class="keyword">const</span> buffer = <span class="keyword">await</span> response.arrayBuffer();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> decodeData = <span class="keyword">await</span> audioCtx.decodeAudioData(buffer);</span><br><span class="line">source.buffer = buffer;</span><br><span class="line">source.connect(audioCtx.destination);</span><br><span class="line">source.loop = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="定制请求"><a href="#定制请求" class="headerlink" title="定制请求"></a>定制请求</h2><p>fetch()的第一个参数是 URL，还可以接受第二个参数，作为配置对象，定制发出的 HTTP 请求</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fetch(url, optionObj)</span><br></pre></td></tr></table></figure>
+
+<p>optionObj 配置对象用到了三个属性</p>
+<ul>
+<li>method：HTTP 请求的方法，POST、DELETE、PUT都在这个属性设置</li>
+<li>headers：一个对象，用来定制 HTTP 请求的标头</li>
+<li>body：POST 请求的数据体</li>
+</ul>
+<h3 id="提交JSON"><a href="#提交JSON" class="headerlink" title="提交JSON"></a>提交JSON</h3><p>标头Content-Type要设成’application/json;charset=utf-8’。因为默认发送的是纯文本，Content-Type的默认值是’text/plain;charset=UTF-8’</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> user =  &#123; <span class="attr">name</span>:  <span class="string">'John'</span>, <span class="attr">surname</span>:  <span class="string">'Smith'</span>  &#125;;</span><br><span class="line"><span class="keyword">const</span> response = <span class="keyword">await</span> fetch(<span class="string">'/article/fetch/post/user'</span>, &#123;</span><br><span class="line">  method: <span class="string">'POST'</span>,</span><br><span class="line">  headers: &#123;</span><br><span class="line">   <span class="string">'Content-Type'</span>: <span class="string">'application/json;charset=utf-8'</span></span><br><span class="line">  &#125;, </span><br><span class="line">  body: <span class="built_in">JSON</span>.stringify(user) </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="提交表单"><a href="#提交表单" class="headerlink" title="提交表单"></a>提交表单</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> form = <span class="built_in">document</span>.querySelector(<span class="string">'form'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> response = <span class="keyword">await</span> fetch(<span class="string">'/users'</span>, &#123;</span><br><span class="line">  method: <span class="string">'POST'</span>,</span><br><span class="line">  body: <span class="keyword">new</span> FormData(form)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = <span class="built_in">document</span>.querySelector(<span class="string">'input[type="file"]'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> data = <span class="keyword">new</span> FormData();</span><br><span class="line">data.append(<span class="string">'file'</span>, input.files[<span class="number">0</span>]);</span><br><span class="line">data.append(<span class="string">'user'</span>, <span class="string">'foo'</span>);</span><br><span class="line"></span><br><span class="line">fetch(<span class="string">'/avatars'</span>, &#123;</span><br><span class="line">  method: <span class="string">'POST'</span>,</span><br><span class="line">  body: data</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="直接上传二进制"><a href="#直接上传二进制" class="headerlink" title="直接上传二进制"></a>直接上传二进制</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> blob = <span class="keyword">await</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span>   </span><br><span class="line">  canvasElem.toBlob(resolve,  <span class="string">'image/png'</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> response = <span class="keyword">await</span> fetch(<span class="string">'/article/fetch/post/image'</span>, &#123;</span><br><span class="line">  method:  <span class="string">'POST'</span>,</span><br><span class="line">  body: blob</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="取消-fetch-请求"><a href="#取消-fetch-请求" class="headerlink" title="取消 fetch 请求"></a>取消 fetch 请求</h2><p>fetch()请求发送以后，如果中途想要取消，需要使用AbortController对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> controller = <span class="keyword">new</span> AbortController();</span><br><span class="line"><span class="keyword">let</span> signal = controller.signal;</span><br><span class="line"></span><br><span class="line">fetch(url, &#123;</span><br><span class="line">  signal: controller.signal</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">signal.addEventListener(<span class="string">'abort'</span>,</span><br><span class="line">  () =&gt; <span class="built_in">console</span>.log(<span class="string">'abort!'</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">controller.abort(); <span class="comment">// 取消</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(signal.aborted); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/dusuwen/tags/API/" rel="tag"># API</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/dusuwen/2024/09/04/译-如何创建一个npm包/" rel="prev" title="译-如何创建一个npm包">
+      <i class="fa fa-chevron-left"></i> 译-如何创建一个npm包
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本用法"><span class="nav-number">1.</span> <span class="nav-text">基本用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Response-对象"><span class="nav-number">2.</span> <span class="nav-text">Response 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读取内容的办法"><span class="nav-number">2.1.</span> <span class="nav-text">读取内容的办法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#response-blob"><span class="nav-number">2.1.1.</span> <span class="nav-text">response.blob()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#response-arrayBuffer"><span class="nav-number">2.1.2.</span> <span class="nav-text">response.arrayBuffer()</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定制请求"><span class="nav-number">3.</span> <span class="nav-text">定制请求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提交JSON"><span class="nav-number">3.1.</span> <span class="nav-text">提交JSON</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提交表单"><span class="nav-number">3.2.</span> <span class="nav-text">提交表单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件上传"><span class="nav-number">3.3.</span> <span class="nav-text">文件上传</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#直接上传二进制"><span class="nav-number">3.4.</span> <span class="nav-text">直接上传二进制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#取消-fetch-请求"><span class="nav-number">4.</span> <span class="nav-text">取消 fetch 请求</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">DrLouie</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/dusuwen/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/dusuwen/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DusuWen" title="GitHub → https://github.com/DusuWen" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DrLouie</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/dusuwen/lib/anime.min.js"></script>
+  <script src="/dusuwen/lib/velocity/velocity.min.js"></script>
+  <script src="/dusuwen/lib/velocity/velocity.ui.min.js"></script>
+<script src="/dusuwen/js/utils.js"></script><script src="/dusuwen/js/motion.js"></script>
+<script src="/dusuwen/js/schemes/muse.js"></script>
+<script src="/dusuwen/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
